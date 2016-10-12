@@ -1,18 +1,11 @@
 package KillBait.PrimordialCrops2.Blocks.Farmland;
 
 import KillBait.PrimordialCrops2.Blocks.BlockBase.PrimordialFarmland;
-import KillBait.PrimordialCrops2.PrimordialCrops2;
 import KillBait.PrimordialCrops2.Registry.ModBlocks;
-import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
-import KillBait.PrimordialCrops2.Utils.LogHelper;
-import net.minecraft.block.BlockDirt;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -23,12 +16,11 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
- * Created by Jon on 11/10/2016.
+ * Created by Jon on 12/10/2016.
  */
-public class InfusedFarmland extends PrimordialFarmland implements ItemModelProvider {
-
-	public InfusedFarmland() {
-		super("InfusedFarmland");
+public class ImperioInfusedFarmland extends PrimordialFarmland {
+	public ImperioInfusedFarmland() {
+		super("ImperioInfusedFarmland");
 		this.setHarvestLevel("shovel", 0);
 	}
 
@@ -55,21 +47,15 @@ public class InfusedFarmland extends PrimordialFarmland implements ItemModelProv
 		return false;
 	}
 
-	/*@Override
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
-	{
-		return new ItemStack(ModBlocks.infusedDirt, 1, 0);
-	}*/
+	@Override
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+		return new ItemStack(ModBlocks.imperioInfusedDirt, 1, 0);
+	}
 
 	@Nullable
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return Item.getItemFromBlock(ModBlocks.infusedDirt);
-		//Blocks.DIRT.getItemDropped(Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT), rand, fortune);
-	}
+		return Item.getItemFromBlock(ModBlocks.imperioInfusedDirt);
 
-	@Override
-	public void registerItemModel(Item itemBlock) {
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 0, name);
 	}
 }

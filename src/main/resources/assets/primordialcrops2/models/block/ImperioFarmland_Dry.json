@@ -3,6 +3,6 @@
   "textures": {
     "particle": "blocks/dirt",
     "dirt": "blocks/dirt",
-    "top": "primordialcrops2:blocks/farmland_dry"
+    "top": "primordialcrops2:blocks/ImperioFarmland_Dry"
   }
 }

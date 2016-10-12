@@ -105,7 +105,7 @@ public class PrimordialFarmland extends BlockFarmland {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		switch (side) {
@@ -121,7 +121,7 @@ public class PrimordialFarmland extends BlockFarmland {
 			default:
 				return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 		}
-	}
+	}*/
 
 	/**
 	 * Get the Item that this Block should drop when harvested.
@@ -130,15 +130,5 @@ public class PrimordialFarmland extends BlockFarmland {
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return Blocks.DIRT.getItemDropped(Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT), rand, fortune);
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-									ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
-
-		LogHelper.info(state);
-		//LogHelper.info(calcdrop(state));
-
-		return false;
 	}
 }

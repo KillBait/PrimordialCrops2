@@ -8,6 +8,7 @@ import KillBait.PrimordialCrops2.Utils.LogHelper;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**

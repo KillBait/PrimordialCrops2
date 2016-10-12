@@ -3,6 +3,6 @@
   "textures": {
     "particle": "blocks/dirt",
     "dirt": "blocks/dirt",
-    "top": "primordialcrops2:blocks/farmland_wet"
+    "top": "primordialcrops2:blocks/ZivicioFarmland_Dry"
   }
 }

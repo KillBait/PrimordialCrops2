@@ -1,0 +1,11 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": {
+      "model": "primordialcrops2:CrucioInfusedDirt"
+    },
+    "inventory": {
+      "model": "primordialcrops2:CrucioInfusedDirt"
+    }
+  }
+}

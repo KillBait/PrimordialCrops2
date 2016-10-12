@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "moisture=0": {
+      "model": "primordialcrops2:ImperioFarmland_Dry"
+    },
+    "moisture=1": {
+      "model": "primordialcrops2:ImperioFarmland_Dry"
+    },
+    "moisture=2": {
+      "model": "primordialcrops2:ImperioFarmland_Dry"
+    },
+    "moisture=3": {
+      "model": "primordialcrops2:ImperioFarmland_Dry"
+    },
+    "moisture=4": {
+      "model": "primordialcrops2:ImperioFarmland_Dry"
+    },
+    "moisture=5": {
+      "model": "primordialcrops2:ImperioFarmland_Dry"
+    },
+    "moisture=6": {
+      "model": "primordialcrops2:ImperioFarmland_Dry"
+    },
+    "moisture=7": {
+      "model": "primordialcrops2:ImperioFarmland_Wet"
+    }
+  },
+  "inventory": {
+    "model": "block/farmland"
+  }
+}

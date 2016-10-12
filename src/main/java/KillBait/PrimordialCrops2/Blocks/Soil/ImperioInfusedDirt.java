@@ -2,38 +2,27 @@ package KillBait.PrimordialCrops2.Blocks.Soil;
 
 import KillBait.PrimordialCrops2.Blocks.BlockBase.PrimordialBlockBase;
 import KillBait.PrimordialCrops2.PrimordialCrops2;
-import KillBait.PrimordialCrops2.Utils.LogHelper;
-import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
 /**
- * Created by Jon on 10/10/2016.
+ * Created by Jon on 12/10/2016.
  */
-public class InfusedDirt extends PrimordialBlockBase {
+public class ImperioInfusedDirt extends PrimordialBlockBase {
 
-	public InfusedDirt() {
-		super(Material.GROUND, "InfusedDirt");
+	public ImperioInfusedDirt() {
+		super(Material.GROUND, "ImperioInfusedDirt");
 		this.setHardness(0.5f);
 		this.setResistance(5f);
 		this.setHarvestLevel("shovel", 0);
@@ -65,33 +54,15 @@ public class InfusedDirt extends PrimordialBlockBase {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-		list.add("\u00A7aUse on farmland, protects a planted crop with:");
+		list.add("\u00A7aCan Be tilled into farmland, protects a planted crop with:");
 		list.add(" ");
-		switch (stack.getMetadata()) {
-			case 0:
-				list.add("- Fall Resistance");
-				break;
-			case 1:
-				list.add("- Fall Resistance");
-				list.add("- Explosion Resistance");
-				break;
-			case 2:
-				list.add("- Fall Resistance");
-				list.add("- Explosion Resistance");
-				list.add("- Fertility (No Water Source Needed)");
-				break;
-			case 3:
-				list.add("- Fall Resistance");
-				list.add("- Explosion Resistance");
-				list.add("- Fertility (No Water Source Needed)");
-				list.add("- Double Tick Rate");
-
-
-		}
+		list.add("- Fall Resistance");
+		list.add("- Explosion Resistance");
+		list.add("- Fertility (No Water Source Needed)");
 	}
 
 	@Override
 	public void registerItemModel(Item itemBlock) {
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 0, "InfusedDirt");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 0, "ImperioInfusedDirt");
 	}
 }

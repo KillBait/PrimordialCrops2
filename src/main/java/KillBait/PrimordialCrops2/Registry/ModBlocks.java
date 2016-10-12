@@ -3,8 +3,14 @@ package KillBait.PrimordialCrops2.Registry;
 import KillBait.PrimordialCrops2.Blocks.BlockBase.PrimordialBlockBase;
 import KillBait.PrimordialCrops2.Blocks.BlockBase.PrimordialFarmland;
 import KillBait.PrimordialCrops2.Blocks.BlockBase.PrimordialOreBase;
-import KillBait.PrimordialCrops2.Blocks.Farmland.InfusedFarmland;
-import KillBait.PrimordialCrops2.Blocks.Soil.InfusedDirt;
+import KillBait.PrimordialCrops2.Blocks.Farmland.AccioInfusedFarmland;
+import KillBait.PrimordialCrops2.Blocks.Farmland.CrucioInfusedFarmland;
+import KillBait.PrimordialCrops2.Blocks.Farmland.ImperioInfusedFarmland;
+import KillBait.PrimordialCrops2.Blocks.Farmland.ZivicioInfusedFarmland;
+import KillBait.PrimordialCrops2.Blocks.Soil.AccioInfusedDirt;
+import KillBait.PrimordialCrops2.Blocks.Soil.CrucioInfusedDirt;
+import KillBait.PrimordialCrops2.Blocks.Soil.ImperioInfusedDirt;
+import KillBait.PrimordialCrops2.Blocks.Soil.ZivicioInfusedDirt;
 import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
@@ -18,14 +24,26 @@ import static net.minecraftforge.fml.common.registry.GameRegistry.register;
 public class ModBlocks {
 
 	public static PrimordialOreBase oreMinicio;
-	public static PrimordialBlockBase infusedDirt;
-	public static ItemBlock infusedDirtIB;
+	public static PrimordialBlockBase accioInfusedDirt;
 	public static PrimordialFarmland accioFarmland;
+	public static PrimordialBlockBase crucioInfusedDirt;
+	public static PrimordialFarmland crucioFarmland;
+	public static PrimordialBlockBase imperioInfusedDirt;
+	public static PrimordialFarmland imperioFarmland;
+	public static PrimordialBlockBase zivicioInfusedDirt;
+	public static PrimordialFarmland zivicioFarmland;
 
 	public static void init() {
-		infusedDirt = register(new InfusedDirt());
-		accioFarmland = register(new InfusedFarmland());
 		oreMinicio = register(new PrimordialOreBase("oreMinicio"));
+		accioInfusedDirt = register(new AccioInfusedDirt());
+		accioFarmland = register(new AccioInfusedFarmland(), null);
+		crucioInfusedDirt = register(new CrucioInfusedDirt());
+		crucioFarmland = register(new CrucioInfusedFarmland(), null);
+		imperioInfusedDirt = register(new ImperioInfusedDirt());
+		imperioFarmland = register(new ImperioInfusedFarmland(), null);
+		zivicioInfusedDirt = register(new ZivicioInfusedDirt());
+		zivicioFarmland = register(new ZivicioInfusedFarmland(), null);
+
 	}
 
 	private static <T extends Block> T register(T block) {

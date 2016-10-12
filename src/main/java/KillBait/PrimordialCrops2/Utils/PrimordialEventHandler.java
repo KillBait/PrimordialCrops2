@@ -1,9 +1,11 @@
 package KillBait.PrimordialCrops2.Utils;
 
 import KillBait.PrimordialCrops2.Registry.ModBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static KillBait.PrimordialCrops2.Blocks.BlockBase.TierCropBlock.TIER;
@@ -15,10 +17,22 @@ public class PrimordialEventHandler {
 
 	@SubscribeEvent
 	public void useHoe(UseHoeEvent event) {
-		if (event.getWorld().getBlockState(event.getPos()).getBlock() == ModBlocks.infusedDirt) {
-			LogHelper.info("used Hoe");
+		Block checkblock = event.getWorld().getBlockState(event.getPos()).getBlock();
+		if (checkblock == ModBlocks.accioInfusedDirt) {
+			event.setResult(Event.Result.ALLOW);
 			event.getWorld().setBlockState(event.getPos(), ModBlocks.accioFarmland.getDefaultState());
-			//event.getWorld().playSound(event.getEntityPlayer(), event.getPos(), SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		}
+		if (checkblock == ModBlocks.crucioInfusedDirt) {
+			event.setResult(Event.Result.ALLOW);
+			event.getWorld().setBlockState(event.getPos(), ModBlocks.crucioFarmland.getDefaultState());
+		}
+		if (checkblock == ModBlocks.imperioInfusedDirt) {
+			event.setResult(Event.Result.ALLOW);
+			event.getWorld().setBlockState(event.getPos(), ModBlocks.imperioFarmland.getDefaultState());
+		}
+		if (checkblock == ModBlocks.zivicioInfusedDirt) {
+			event.setResult(Event.Result.ALLOW);
+			event.getWorld().setBlockState(event.getPos(), ModBlocks.zivicioFarmland.getDefaultState());
 		}
 	}
 }
