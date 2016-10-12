@@ -1,0 +1,16 @@
+[
+{
+  "modid": "primordialcrops2",
+  "name": "Primordial Crops 2.0",
+  "description": "Magical Crops invisioned in 1.10.2",
+  "version": "0.0.1",
+  "mcversion": "1.10.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["KillBait"],
+  "credits": "Mod idea from Magical Crops",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,28 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "accio": {
+      "normal": {
+        "model": "primordialcrops2:InfusedDirt"
+      }
+    },
+    "crucio": {
+      "normal": {
+        "model": "primordialcrops2:InfusedDirt"
+      }
+    },
+    "imperio": {
+      "normal": {
+        "model": "primordialcrops2:InfusedDirt"
+      }
+    },
+    "zivicio": {
+      "normal": {
+        "model": "primordialcrops2:InfusedDirt"
+      }
+    },
+    "inventory": {
+      "model": "primordialcrops2:InfusedDirt"
+    }
+  }
+}

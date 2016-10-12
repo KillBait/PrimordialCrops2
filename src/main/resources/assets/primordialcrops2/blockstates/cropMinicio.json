@@ -1,0 +1,48 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cross"
+  },
+  "variants": {
+    "age": {
+      "0": {
+        "textures": {
+          "cross": "primordialcrops2:blocks/CropBase_0"
+        }
+      },
+      "1": {
+        "textures": {
+          "cross": "primordialcrops2:blocks/CropBase_1"
+        }
+      },
+      "2": {
+        "textures": {
+          "cross": "primordialcrops2:blocks/CropBase_2"
+        }
+      },
+      "3": {}
+    },
+    "tier": {
+      "0": {
+        "textures": {
+          "cross": "blocks/cobblestone"
+        }
+      },
+      "1": {
+        "textures": {
+          "cross": "blocks/sand"
+        }
+      },
+      "2": {
+        "textures": {
+          "cross": "blocks/gravel"
+        }
+      },
+      "3": {
+        "textures": {
+          "cross": "blocks/dirt"
+        }
+      }
+    }
+  }
+}

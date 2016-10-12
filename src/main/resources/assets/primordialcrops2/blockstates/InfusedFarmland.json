@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "moisture=0": {
+      "model": "primordialcrops2:farmland_dry"
+    },
+    "moisture=1": {
+      "model": "primordialcrops2:farmland_dry"
+    },
+    "moisture=2": {
+      "model": "primordialcrops2:farmland_dry"
+    },
+    "moisture=3": {
+      "model": "primordialcrops2:farmland_dry"
+    },
+    "moisture=4": {
+      "model": "primordialcrops2:farmland_dry"
+    },
+    "moisture=5": {
+      "model": "primordialcrops2:farmland_dry"
+    },
+    "moisture=6": {
+      "model": "primordialcrops2:farmland_dry"
+    },
+    "moisture=7": {
+      "model": "primordialcrops2:farmland_moist"
+    }
+  },
+  "inventory": {
+    "model": "block/farmland"
+  }
+}
