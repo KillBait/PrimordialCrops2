@@ -1,6 +1,6 @@
 package KillBait.PrimordialCrops2.Compat.WAILA;
 
-import KillBait.PrimordialCrops2.Blocks.BlockBase.TierCropBlock;
+import KillBait.PrimordialCrops2.Blocks.TierCropBlock;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -15,9 +15,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 
-import static KillBait.PrimordialCrops2.Blocks.BlockBase.TierCropBlock.AGE;
-
 import java.util.List;
+
+import static KillBait.PrimordialCrops2.Blocks.TierCropBlock.AGE;
 
 /**
  * Created by Jon on 04/10/2016.

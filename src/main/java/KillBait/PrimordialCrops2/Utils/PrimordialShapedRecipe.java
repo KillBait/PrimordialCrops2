@@ -1,6 +1,6 @@
 package KillBait.PrimordialCrops2.Utils;
 
-import KillBait.PrimordialCrops2.Items.BaseItem.ItemSeedBase;
+import KillBait.PrimordialCrops2.Items.PrimordialItemSeed;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -60,7 +60,7 @@ public class PrimordialShapedRecipe extends ShapedOreRecipe implements IRecipe {
 						return false;
 					}
 					// check if the value of the Tier NBT matches the previously found NBT Tier, if not then fail
-					if (slot.getItem() instanceof ItemSeedBase) {
+					if (slot.getItem() instanceof PrimordialItemSeed) {
 						if (slot.hasTagCompound()) {
 							if (slot.getTagCompound().hasKey("Tier")) {
 								if (lasttier == 0) {

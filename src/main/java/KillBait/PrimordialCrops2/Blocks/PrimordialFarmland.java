@@ -1,31 +1,23 @@
-package KillBait.PrimordialCrops2.Blocks.BlockBase;
+package KillBait.PrimordialCrops2.Blocks;
 
-import KillBait.PrimordialCrops2.PrimordialCrops2;
-import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
-import KillBait.PrimordialCrops2.Utils.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.IPlantable;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -43,10 +35,33 @@ public class PrimordialFarmland extends BlockFarmland {
 	public PrimordialFarmland(String regName) {
 		super();
 		this.setHardness(0.5f);
-		this.setResistance(5f);
+		this.setHarvestLevel("shovel", 0);
 		this.setUnlocalizedName(regName);
 		this.setRegistryName(regName);
 		//this.setDefaultState(this.blockState.getBaseState().withProperty(MOISTURE, Integer.valueOf(0)));
+	}
+
+	@Override
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable) {
+		EnumPlantType plantType = plantable.getPlantType(world, pos.up());
+		switch (plantType) {
+			case Desert:
+				return true;
+			case Nether:
+				return true;
+			case Crop:
+				return true;
+			case Cave:
+				return true;
+			case Plains:
+				return true;
+			case Water:
+				return false;
+			case Beach:
+				return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -76,12 +91,13 @@ public class PrimordialFarmland extends BlockFarmland {
 		super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
 	}
 
-	private boolean hasCrops(World worldIn, BlockPos pos) {
+
+	public boolean hasCrops(World worldIn, BlockPos pos) {
 		Block block = worldIn.getBlockState(pos.up()).getBlock();
 		return block instanceof net.minecraftforge.common.IPlantable && canSustainPlant(worldIn.getBlockState(pos), worldIn, pos, net.minecraft.util.EnumFacing.UP, (net.minecraftforge.common.IPlantable) block);
 	}
 
-	private boolean hasWater(World worldIn, BlockPos pos) {
+	public boolean hasWater(World worldIn, BlockPos pos) {
 		for (BlockPos.MutableBlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(pos.add(-4, 0, -4), pos.add(4, 1, 4))) {
 			if (worldIn.getBlockState(blockpos$mutableblockpos).getMaterial() == Material.WATER) {
 				return true;

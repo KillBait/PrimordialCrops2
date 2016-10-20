@@ -1,4 +1,4 @@
-package KillBait.PrimordialCrops2.Items.BaseItem;
+package KillBait.PrimordialCrops2.Items;
 
 import KillBait.PrimordialCrops2.PrimordialCrops2;
 import KillBait.PrimordialCrops2.Utils.ItemModelProvider;

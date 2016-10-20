@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "primordialcrops2:blocks/CropCoal"
+  }
+}

@@ -1,39 +1,47 @@
 package KillBait.PrimordialCrops2.Proxy;
 
+import KillBait.PrimordialCrops2.Blocks.Machines.Furnace.FurnaceProxy;
+import KillBait.PrimordialCrops2.Compat.CompatHandler;
 import KillBait.PrimordialCrops2.Registry.ModBlocks;
 import KillBait.PrimordialCrops2.Registry.ModCrops;
 import KillBait.PrimordialCrops2.Registry.ModItems;
-import KillBait.PrimordialCrops2.Compat.CompatHandler;
 import KillBait.PrimordialCrops2.Registry.ModRecipes;
 import KillBait.PrimordialCrops2.Utils.PrimordialEventHandler;
-import KillBait.PrimordialCrops2.Utils.PrimordialShapedRecipe;
+import KillBait.PrimordialCrops2.WorldGen.PrimordialWorldGen;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPED;
+import static KillBait.PrimordialCrops2.PrimordialCrops2.instance;
 
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent e) {
+
 		ModBlocks.init();
 		ModCrops.init();
 		ModItems.init();
 
 		//OreDictonaryRegistry.regOreDic();
+
 		CompatHandler.registerTOP();
 		CompatHandler.registerWaila();
-		RecipeSorter.register("primordialcrops2:seedtier", PrimordialShapedRecipe.class, SHAPED, "after:minecraft:shaped before:forge:shapedore");
+
+		//RecipeSorter.register("primordialcrops2:seedtier", PrimordialShapedRecipe.class, SHAPED, "after:minecraft:shaped before:forge:shapedore");
+
 		MinecraftForge.EVENT_BUS.register(new PrimordialEventHandler());
 
 
 	}
 
 	public void init(FMLInitializationEvent e) {
-		//GameRegistry.registerWorldGenerator(new MagicalWorldGen(), 0);
+		GameRegistry.registerWorldGenerator(new PrimordialWorldGen(), 0);
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new FurnaceProxy());
+		//FMLInterModComms.sendMessage("EnderCore", "addRightClickCrop", "primordialcrops2:CoalSeed|primordialcrops2:cropCoal|15|13");
 		ModRecipes.init();
 	}
 

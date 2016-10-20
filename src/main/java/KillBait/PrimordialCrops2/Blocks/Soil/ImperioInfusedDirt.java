@@ -1,6 +1,6 @@
 package KillBait.PrimordialCrops2.Blocks.Soil;
 
-import KillBait.PrimordialCrops2.Blocks.BlockBase.PrimordialBlockBase;
+import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
 import KillBait.PrimordialCrops2.PrimordialCrops2;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -54,11 +54,14 @@ public class ImperioInfusedDirt extends PrimordialBlockBase {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-		list.add("\u00A7aCan Be tilled into farmland, protects a planted crop with:");
+		list.add("\u00A7aCan be tilled into farmland.");
 		list.add(" ");
+		list.add("Imperio Infused Farmland gives crops:");
 		list.add("- Fall Resistance");
-		list.add("- Explosion Resistance");
+		list.add("- Explosion Resistance (Creeper/TNT Level)");
+		;
 		list.add("- Fertility (No Water Source Needed)");
+		list.add("- 8 Essence per harvest");
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package KillBait.PrimordialCrops2.Blocks.BlockBase;
+package KillBait.PrimordialCrops2.Blocks;
 
 import KillBait.PrimordialCrops2.PrimordialCrops2;
 import net.minecraft.block.material.Material;

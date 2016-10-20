@@ -1,12 +1,13 @@
 package KillBait.PrimordialCrops2.Registry;
 
-import KillBait.PrimordialCrops2.Blocks.BlockBase.PrimordialBlockBase;
-import KillBait.PrimordialCrops2.Blocks.BlockBase.PrimordialFarmland;
-import KillBait.PrimordialCrops2.Blocks.BlockBase.PrimordialOreBase;
 import KillBait.PrimordialCrops2.Blocks.Farmland.AccioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Farmland.CrucioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Farmland.ImperioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Farmland.ZivicioInfusedFarmland;
+import KillBait.PrimordialCrops2.Blocks.Machines.Furnace.PrimordialFurnace;
+import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
+import KillBait.PrimordialCrops2.Blocks.PrimordialFarmland;
+import KillBait.PrimordialCrops2.Blocks.PrimordialOreBase;
 import KillBait.PrimordialCrops2.Blocks.Soil.AccioInfusedDirt;
 import KillBait.PrimordialCrops2.Blocks.Soil.CrucioInfusedDirt;
 import KillBait.PrimordialCrops2.Blocks.Soil.ImperioInfusedDirt;
@@ -16,34 +17,43 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import static net.minecraftforge.fml.common.registry.GameRegistry.register;
-
 /**
  * Created by Jon on 02/10/2016.
  */
 public class ModBlocks {
 
 	public static PrimordialOreBase oreMinicio;
+	public static PrimordialOreBase oreAccio;
+	public static PrimordialOreBase oreCrucio;
+
 	public static PrimordialBlockBase accioInfusedDirt;
-	public static PrimordialFarmland accioFarmland;
 	public static PrimordialBlockBase crucioInfusedDirt;
-	public static PrimordialFarmland crucioFarmland;
 	public static PrimordialBlockBase imperioInfusedDirt;
-	public static PrimordialFarmland imperioFarmland;
 	public static PrimordialBlockBase zivicioInfusedDirt;
+
+	public static PrimordialFarmland accioFarmland;
+	public static PrimordialFarmland crucioFarmland;
+	public static PrimordialFarmland imperioFarmland;
 	public static PrimordialFarmland zivicioFarmland;
+
+	public static PrimordialBlockBase furnace;
 
 	public static void init() {
 		oreMinicio = register(new PrimordialOreBase("oreMinicio"));
-		accioInfusedDirt = register(new AccioInfusedDirt());
+		oreAccio = register(new PrimordialOreBase("oreAccio"));
+		oreCrucio = register(new PrimordialOreBase("oreCrucio"));
+
 		accioFarmland = register(new AccioInfusedFarmland(), null);
-		crucioInfusedDirt = register(new CrucioInfusedDirt());
 		crucioFarmland = register(new CrucioInfusedFarmland(), null);
-		imperioInfusedDirt = register(new ImperioInfusedDirt());
 		imperioFarmland = register(new ImperioInfusedFarmland(), null);
-		zivicioInfusedDirt = register(new ZivicioInfusedDirt());
 		zivicioFarmland = register(new ZivicioInfusedFarmland(), null);
 
+		accioInfusedDirt = register(new AccioInfusedDirt());
+		crucioInfusedDirt = register(new CrucioInfusedDirt());
+		imperioInfusedDirt = register(new ImperioInfusedDirt());
+		zivicioInfusedDirt = register(new ZivicioInfusedDirt());
+
+		furnace = register(new PrimordialFurnace());
 	}
 
 	private static <T extends Block> T register(T block) {

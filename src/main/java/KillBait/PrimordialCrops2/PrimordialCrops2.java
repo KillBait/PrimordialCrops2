@@ -1,27 +1,20 @@
 package KillBait.PrimordialCrops2;
 
 import KillBait.PrimordialCrops2.Registry.ModItems;
-import KillBait.PrimordialCrops2.Utils.PrimordialShapedRecipe;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-
-import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPED;
-import static net.minecraftforge.oredict.RecipeSorter.register;
 
 /**
  * Created by Jon on 30/09/2016.
  */
 
 @Mod(modid = Info.MODID, version = Info.VERSION, name = Info.MODNAME)
+//, dependencies = "after:endercore;after:Waila;after:TheOneProbe;after:JEI@[3.12.3.292,)")
 
 public class PrimordialCrops2 {
 

@@ -2,13 +2,11 @@ package KillBait.PrimordialCrops2.Utils;
 
 import KillBait.PrimordialCrops2.Registry.ModBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.SoundCategory;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import static KillBait.PrimordialCrops2.Blocks.BlockBase.TierCropBlock.TIER;
 
 /**
  * Created by Jon on 10/10/2016.
@@ -34,5 +32,18 @@ public class PrimordialEventHandler {
 			event.setResult(Event.Result.ALLOW);
 			event.getWorld().setBlockState(event.getPos(), ModBlocks.zivicioFarmland.getDefaultState());
 		}
+	}
+
+	@SubscribeEvent
+	public void BlockPlace(BlockEvent.PlaceEvent event) {
+		//LogHelper.info("block place event");
+		event.setResult(Event.Result.ALLOW);
+
+	}
+
+	@SubscribeEvent
+	public void handleCropRightClick(PlayerInteractEvent event) {
+		//LogHelper.info("Crop Right Click event");
+		event.setResult(Event.Result.ALLOW);
 	}
 }

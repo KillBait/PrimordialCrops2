@@ -1,13 +1,13 @@
-package KillBait.PrimordialCrops2.Crops.Standard;
+package KillBait.PrimordialCrops2.Blocks.Crops.Standard;
 
-import KillBait.PrimordialCrops2.Blocks.BlockBase.TierCropBlock;
+import KillBait.PrimordialCrops2.Blocks.PrimordialCropBlock;
 import KillBait.PrimordialCrops2.Registry.ModItems;
 import net.minecraft.item.Item;
 
 /**
  * Created by Jon on 08/10/2016.
  */
-public class cropMinicio extends TierCropBlock {
+public class cropMinicio extends PrimordialCropBlock {
 
 	public cropMinicio() {
 		super();
