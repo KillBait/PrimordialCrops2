@@ -1,4 +1,4 @@
-package KillBait.PrimordialCrops2.Utils;
+package KillBait.PrimordialCrops2.Handlers;
 
 import KillBait.PrimordialCrops2.Registry.ModBlocks;
 import net.minecraft.block.Block;
@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * Created by Jon on 10/10/2016.
  */
-public class PrimordialEventHandler {
+public class EventHandler {
 
 	@SubscribeEvent
 	public void useHoe(UseHoeEvent event) {

@@ -5,9 +5,9 @@ import KillBait.PrimordialCrops2.Blocks.Farmland.CrucioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Farmland.ImperioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Farmland.ZivicioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Machines.Furnace.PrimordialFurnace;
-import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
+import KillBait.PrimordialCrops2.Blocks.PrimordialBlock;
 import KillBait.PrimordialCrops2.Blocks.PrimordialFarmland;
-import KillBait.PrimordialCrops2.Blocks.PrimordialOreBase;
+import KillBait.PrimordialCrops2.Blocks.PrimordialOre;
 import KillBait.PrimordialCrops2.Blocks.Soil.AccioInfusedDirt;
 import KillBait.PrimordialCrops2.Blocks.Soil.CrucioInfusedDirt;
 import KillBait.PrimordialCrops2.Blocks.Soil.ImperioInfusedDirt;
@@ -22,26 +22,26 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
  */
 public class ModBlocks {
 
-	public static PrimordialOreBase oreMinicio;
-	public static PrimordialOreBase oreAccio;
-	public static PrimordialOreBase oreCrucio;
+	public static PrimordialOre oreMinicio;
+	public static PrimordialOre oreAccio;
+	public static PrimordialOre oreCrucio;
 
-	public static PrimordialBlockBase accioInfusedDirt;
-	public static PrimordialBlockBase crucioInfusedDirt;
-	public static PrimordialBlockBase imperioInfusedDirt;
-	public static PrimordialBlockBase zivicioInfusedDirt;
+	public static PrimordialBlock accioInfusedDirt;
+	public static PrimordialBlock crucioInfusedDirt;
+	public static PrimordialBlock imperioInfusedDirt;
+	public static PrimordialBlock zivicioInfusedDirt;
 
 	public static PrimordialFarmland accioFarmland;
 	public static PrimordialFarmland crucioFarmland;
 	public static PrimordialFarmland imperioFarmland;
 	public static PrimordialFarmland zivicioFarmland;
 
-	public static PrimordialBlockBase furnace;
+	public static PrimordialFurnace furnace;
 
 	public static void init() {
-		oreMinicio = register(new PrimordialOreBase("oreMinicio"));
-		oreAccio = register(new PrimordialOreBase("oreAccio"));
-		oreCrucio = register(new PrimordialOreBase("oreCrucio"));
+		oreMinicio = register(new PrimordialOre("oreMinicio"));
+		oreAccio = register(new PrimordialOre("oreAccio"));
+		oreCrucio = register(new PrimordialOre("oreCrucio"));
 
 		accioFarmland = register(new AccioInfusedFarmland(), null);
 		crucioFarmland = register(new CrucioInfusedFarmland(), null);

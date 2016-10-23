@@ -1,6 +1,6 @@
 package KillBait.PrimordialCrops2.Blocks.Soil;
 
-import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
+import KillBait.PrimordialCrops2.Blocks.PrimordialBlock;
 import KillBait.PrimordialCrops2.PrimordialCrops2;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by Jon on 12/10/2016.
  */
-public class ImperioInfusedDirt extends PrimordialBlockBase {
+public class ImperioInfusedDirt extends PrimordialBlock {
 
 	public ImperioInfusedDirt() {
 		super(Material.GROUND, "ImperioInfusedDirt");

@@ -32,7 +32,7 @@ public class TOPCompatibility {
 		@Override
 		public Void apply(ITheOneProbe theOneProbe) {
 			probe = theOneProbe;
-			LogHelper.info("Enabled support for The One Probe");
+			LogHelper.info("Registering support for The One Probe");
 			probe.registerProvider(new IProbeInfoProvider() {
 				@Override
 				public String getID() {

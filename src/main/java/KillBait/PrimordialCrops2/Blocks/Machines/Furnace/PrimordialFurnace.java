@@ -1,10 +1,9 @@
 package KillBait.PrimordialCrops2.Blocks.Machines.Furnace;
 
-import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
+import KillBait.PrimordialCrops2.Blocks.PrimordialBlockContainer;
 import KillBait.PrimordialCrops2.PrimordialCrops2;
-import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
+import KillBait.PrimordialCrops2.Utils.LogHelper;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -13,13 +12,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,11 +31,12 @@ import static KillBait.PrimordialCrops2.Info.MODID;
 /**
  * Created by Jon on 19/10/2016.
  */
-public class PrimordialFurnace extends PrimordialBlockBase implements ItemModelProvider, ITileEntityProvider {
+public class PrimordialFurnace extends PrimordialBlockContainer {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyBool WORKING = PropertyBool.create("enabled");
-	public static final int GUI_ID = 2; // ID 1 reserved for in-game book
+	public static String furnaceName;
+	public static final int GUI_ID = 1; // ID 1 reserved for in-game book
 
 
 	public PrimordialFurnace() {
@@ -50,10 +50,6 @@ public class PrimordialFurnace extends PrimordialBlockBase implements ItemModelP
 		return new FurnaceTileEntity();
 	}
 
-	private FurnaceTileEntity getTileEntity(World world, BlockPos pos) {
-		return (FurnaceTileEntity) world.getTileEntity(pos);
-	}
-
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side,
 									float hitX, float hitY, float hitZ) {
@@ -61,24 +57,47 @@ public class PrimordialFurnace extends PrimordialBlockBase implements ItemModelP
 		if (world.isRemote) {
 			return true;
 		}
-		TileEntity te = world.getTileEntity(pos);
-		if (!(te instanceof FurnaceTileEntity)) {
-			return false;
-		}
 		player.openGui(PrimordialCrops2.instance, GUI_ID, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
-	}
-
-	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
-		int powered = world.isBlockIndirectlyGettingPowered(pos);
-		world.setBlockState(pos, state.withProperty(WORKING, powered > 0), 3);
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		world.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 	}
+
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (tileEntity instanceof IInventory) {
+			LogHelper.info("dropping minventory");
+			InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileEntity);
+		}
+		// we MUST call super last, it removes the tileentity
+		super.breakBlock(worldIn, pos, state);
+	}
+
+	//remove neighborChanged when furnace working
+	@Override
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
+		int powered = world.isBlockIndirectlyGettingPowered(pos);
+		world.setBlockState(pos, state.withProperty(WORKING, powered > 0), 3);
+	}
+
+	// Un-needed???
+	// Remove if it is
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (tileEntity instanceof FurnaceTileEntity) {
+			FurnaceTileEntity furnaceTileEntity = (FurnaceTileEntity) tileEntity;
+			//int burningSlots = furnaceTileEntity.numberOfBurningFuelSlots();
+			//burningSlots = MathHelper.clamp_int(burningSlots, 0, 4);
+			//return getDefaultState().withProperty(BURNING_SIDES_COUNT, burningSlots);
+		}
+		return state;
+	}
+
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
@@ -95,6 +114,11 @@ public class PrimordialFurnace extends PrimordialBlockBase implements ItemModelP
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, FACING, WORKING);
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState iBlockState) {
+		return EnumBlockRenderType.MODEL;
 	}
 
 	@SideOnly(Side.CLIENT)

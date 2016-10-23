@@ -1,12 +1,12 @@
 package KillBait.PrimordialCrops2.Proxy;
 
-import KillBait.PrimordialCrops2.Blocks.Machines.Furnace.FurnaceProxy;
 import KillBait.PrimordialCrops2.Compat.CompatHandler;
+import KillBait.PrimordialCrops2.Handlers.EventHandler;
+import KillBait.PrimordialCrops2.Handlers.GuiHandler;
 import KillBait.PrimordialCrops2.Registry.ModBlocks;
 import KillBait.PrimordialCrops2.Registry.ModCrops;
 import KillBait.PrimordialCrops2.Registry.ModItems;
 import KillBait.PrimordialCrops2.Registry.ModRecipes;
-import KillBait.PrimordialCrops2.Utils.PrimordialEventHandler;
 import KillBait.PrimordialCrops2.WorldGen.PrimordialWorldGen;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,14 +33,14 @@ public class CommonProxy {
 
 		//RecipeSorter.register("primordialcrops2:seedtier", PrimordialShapedRecipe.class, SHAPED, "after:minecraft:shaped before:forge:shapedore");
 
-		MinecraftForge.EVENT_BUS.register(new PrimordialEventHandler());
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 
 
 	}
 
 	public void init(FMLInitializationEvent e) {
 		GameRegistry.registerWorldGenerator(new PrimordialWorldGen(), 0);
-		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new FurnaceProxy());
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 		//FMLInterModComms.sendMessage("EnderCore", "addRightClickCrop", "primordialcrops2:CoalSeed|primordialcrops2:cropCoal|15|13");
 		ModRecipes.init();
 	}

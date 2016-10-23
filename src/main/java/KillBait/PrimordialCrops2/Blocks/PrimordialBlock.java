@@ -11,11 +11,11 @@ import net.minecraft.item.Item;
  * Created by Jon on 02/10/2016.
  */
 
-public class PrimordialBlockBase extends Block implements ItemModelProvider {
+public class PrimordialBlock extends Block implements ItemModelProvider {
 
 	protected String name;
 
-	public PrimordialBlockBase(Material material, String unlocalizedName) {
+	public PrimordialBlock(Material material, String unlocalizedName) {
 		super(material);
 		this.name = unlocalizedName;
 		this.setUnlocalizedName(unlocalizedName);
@@ -29,7 +29,7 @@ public class PrimordialBlockBase extends Block implements ItemModelProvider {
 	}
 
 	@Override
-	public PrimordialBlockBase setCreativeTab(CreativeTabs tab) {
+	public PrimordialBlock setCreativeTab(CreativeTabs tab) {
 		super.setCreativeTab(tab);
 		return this;
 	}

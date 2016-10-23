@@ -6,9 +6,9 @@ import net.minecraft.block.material.Material;
 /**
  * Created by Jon on 02/10/2016.
  */
-public class PrimordialOreBase extends PrimordialBlockBase {
+public class PrimordialOre extends PrimordialBlock {
 
-	public PrimordialOreBase(String unlocalizedName) {
+	public PrimordialOre(String unlocalizedName) {
 		super(Material.ROCK, unlocalizedName);
 		this.setHardness(3f);
 		this.setResistance(5f);

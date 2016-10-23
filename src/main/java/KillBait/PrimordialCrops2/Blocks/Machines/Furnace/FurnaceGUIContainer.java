@@ -1,7 +1,12 @@
 package KillBait.PrimordialCrops2.Blocks.Machines.Furnace;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.awt.*;
 
 import static KillBait.PrimordialCrops2.Info.MODID;
 
@@ -9,27 +14,67 @@ import static KillBait.PrimordialCrops2.Info.MODID;
  * Created by Jon on 20/10/2016.
  */
 
+@SideOnly(Side.CLIENT)
 public class FurnaceGUIContainer extends GuiContainer {
 
 	private static final int WIDTH = 176;
 	private static final int HEIGHT = 166;
-
+	private FurnaceTileEntity furnaceTE;
+	private InventoryPlayer playerInv;
 	private static final ResourceLocation background = new ResourceLocation(MODID, "textures/blocks/gui/Furnace.png");
 
-	public FurnaceGUIContainer(FurnaceTileEntity tileEntity, FurnaceContainer container) {
-		super(container);
+	private Point progbar_cord = new Point(79, 35);
+	private Point progbar_uv = new Point(176, 14);
+	private Point progbar_size = new Point(24, 17);
 
-		xSize = WIDTH;
-		ySize = HEIGHT;
+	private Point flame_cord = new Point(57, 37);
+	private Point flame_uv = new Point(176, 0);
+	private Point flame_size = new Point(14, 14);
+
+	private Point catalyst_cord = new Point(40, 35);
+	private Point catalyst_uv = new Point(177, 32);
+	private Point catalyst_size = new Point(2, 16);
+
+	private double test = 0;
+
+
+	public FurnaceGUIContainer(InventoryPlayer pInv, FurnaceTileEntity furnaceTileEntity) {
+		super(new FurnaceContainer(pInv, furnaceTileEntity));
+		this.xSize = WIDTH;
+		this.ySize = HEIGHT;
+		this.furnaceTE = furnaceTileEntity;
+		this.playerInv = pInv;
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+
 		mc.getTextureManager().bindTexture(background);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		String s = "aaaaaaaa";//PrimordialFurnace..getDisplayName().getUnformattedText();
-		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-		this.fontRendererObj.drawString("bbbbbbbbb"/*this.playerInventory.getDisplayName().getUnformattedText()*/, 8, this.ySize - 96 + 2, 4210752);
+		if (test >= 1) test = 0;
+		test = test + 0.01;
+
+		// get cook progress as a double between 0 and 1
+		double cookProgress = test;//tileEntity.fractionOfCookTimeComplete();
+		// draw the cook progress bar
+		drawTexturedModalRect(guiLeft + progbar_cord.x, guiTop + progbar_cord.y, progbar_uv.x, progbar_uv.y, (int) (cookProgress * progbar_size.x), progbar_size.y);
+
+		int yOffset = (int) (flame_size.y * cookProgress);
+
+		drawTexturedModalRect(guiLeft + flame_cord.x, guiTop + flame_cord.y + yOffset, flame_uv.x, flame_uv.y + yOffset, flame_size.x, flame_size.y - yOffset);
+
+		int cyOffset = (int) (catalyst_size.y * cookProgress);
+
+		drawTexturedModalRect(guiLeft + catalyst_cord.x, guiTop + catalyst_cord.y + cyOffset, catalyst_uv.x, catalyst_uv.y + cyOffset, catalyst_size.x, catalyst_size.y - cyOffset);
+
+		String s = furnaceTE.getDisplayName().getUnformattedText();
+		this.fontRendererObj.drawString(s, guiLeft + (this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2), guiTop + 6, 4210752);
+		this.fontRendererObj.drawString(this.playerInv.getDisplayName().getUnformattedText(), guiLeft + 8, guiTop + (this.ySize - 96 + 2), 4210752);
+
+	}
+
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+
 	}
 
 	/*private static final ResourceLocation FURNACE_GUI_TEXTURES = new ResourceLocation("textures/gui/container/furnace.png");
