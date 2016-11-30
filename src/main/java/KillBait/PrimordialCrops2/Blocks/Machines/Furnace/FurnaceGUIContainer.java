@@ -35,7 +35,7 @@ public class FurnaceGUIContainer extends GuiContainer {
 	private Point catalyst_uv = new Point(177, 32);
 	private Point catalyst_size = new Point(2, 16);
 
-	private double test = 0;
+	//private double test = 0;
 
 
 	public FurnaceGUIContainer(InventoryPlayer pInv, FurnaceTileEntity furnaceTileEntity) {
@@ -51,11 +51,13 @@ public class FurnaceGUIContainer extends GuiContainer {
 
 		mc.getTextureManager().bindTexture(background);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		if (test >= 1) test = 0;
-		test = test + 0.01;
+		//if (test >= 1) test = 0;
+		//test = test + 0.01;
 
-		// get cook progress as a double between 0 and 1
-		double cookProgress = test;//tileEntity.fractionOfCookTimeComplete();
+		// cook progress is a double between 0 (0%) and 1 (100%)
+		// catalyst remaining is a double between 100 (full) to 0 (Empty)
+		// fuel remaining is a double between 100 (full) to 0 (Empty)
+		double cookProgress = 100;//tileEntity.fractionOfCookTimeComplete();
 		// draw the cook progress bar
 		drawTexturedModalRect(guiLeft + progbar_cord.x, guiTop + progbar_cord.y, progbar_uv.x, progbar_uv.y, (int) (cookProgress * progbar_size.x), progbar_size.y);
 

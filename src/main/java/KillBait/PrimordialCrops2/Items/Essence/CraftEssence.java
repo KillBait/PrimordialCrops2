@@ -21,6 +21,7 @@ public class CraftEssence extends PrimordialItemBase implements ItemModelProvide
 		super("CraftEssence", true);
 	}
 
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return super.getUnlocalizedName(stack) + "_" + stack.getMetadata();
@@ -49,13 +50,13 @@ public class CraftEssence extends PrimordialItemBase implements ItemModelProvide
 				list.add("200% speed increase, 100% chance of second output");
 				break;
 			case 2:
-				list.add("300% speed increase, 150% chance of second output");
+				list.add("400% speed increase, 150% chance of second output");
 				break;
 			case 3:
-				list.add("400% speed increase, 200% chance of second output");
+				list.add("600% speed increase, 200% chance of second output");
 				break;
 			case 4:
-				list.add("500% speed increase, 300% chance of second output");
+				list.add("1000% speed increase, 300% chance of second output");
 				break;
 		}
 	}

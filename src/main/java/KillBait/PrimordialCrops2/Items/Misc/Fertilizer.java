@@ -57,7 +57,7 @@ public class Fertilizer extends PrimordialItemBase implements ItemModelProvider 
 				list.add("- Fall Resistance");
 				list.add("- Explosion Resistance");
 				list.add("- Fertility (No Water Source Needed)");
-				list.add("- Double Tick Rate");
+				list.add("- Effect TBD");
 
 
 		}

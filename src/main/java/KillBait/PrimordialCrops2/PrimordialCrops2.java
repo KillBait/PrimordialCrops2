@@ -28,7 +28,7 @@ public class PrimordialCrops2 {
 	public static CreativeTabs PrimordialCrops2 = new CreativeTabs("PrimordialCrops2") {
 		@Override
 		public Item getTabIconItem() {
-			return ModItems.minicioEssence;
+			return ModItems.minicioSeed;
 		}
 
 	};

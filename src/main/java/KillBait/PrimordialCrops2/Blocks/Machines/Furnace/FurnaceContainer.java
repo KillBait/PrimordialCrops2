@@ -2,9 +2,12 @@ package KillBait.PrimordialCrops2.Blocks.Machines.Furnace;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -15,6 +18,7 @@ import java.awt.*;
 public class FurnaceContainer extends Container {
 
 	private FurnaceTileEntity furnaceTE;
+	private int[] cachedFields;
 	private Point slotcoord_input = new Point(56, 17);
 	private Point slotcoord_fuel = new Point(56, 53);
 	private Point slotcoord_output = new Point(116, 35);
@@ -45,16 +49,16 @@ public class FurnaceContainer extends Container {
 
 		// Add our own slots
 		int slotIndex = 0;
-		addSlotToContainer(new SlotCatalyst(this.furnaceTE, slotIndex, slotcoord_catalyst.x, slotcoord_catalyst.y));
-		slotIndex++;
+		addSlotToContainer(new SlotCatalyst(this.furnaceTE, slotIndex++, slotcoord_catalyst.x, slotcoord_catalyst.y));
+		//slotIndex++;
 		//itemHandler = this.furnaceTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
-		addSlotToContainer(new SlotFuel(this.furnaceTE, slotIndex, slotcoord_fuel.x, slotcoord_fuel.y));
-		slotIndex++;
+		addSlotToContainer(new SlotFuel(this.furnaceTE, slotIndex++, slotcoord_fuel.x, slotcoord_fuel.y));
+		//slotIndex++;
 		//itemHandler = this.furnaceTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
-		addSlotToContainer(new SlotInput(this.furnaceTE, slotIndex, slotcoord_input.x, slotcoord_input.y));
-		slotIndex++;
+		addSlotToContainer(new SlotInput(this.furnaceTE, slotIndex++, slotcoord_input.x, slotcoord_input.y));
+		//slotIndex++;
 		//itemHandler = this.furnaceTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.SOUTH);
-		addSlotToContainer(new SlotOutput(this.furnaceTE, slotIndex, slotcoord_output.x, slotcoord_output.y));
+		addSlotToContainer(new SlotOutput(this.furnaceTE, slotIndex++, slotcoord_output.x, slotcoord_output.y));
 	}
 
 	private void addPlayerSlots(IInventory playerInventory) {
@@ -106,6 +110,42 @@ public class FurnaceContainer extends Container {
 
 
 		return itemstack;
+	}
+
+	@Override
+	public void detectAndSendChanges() {
+		super.detectAndSendChanges();
+
+		boolean allFieldsHaveChanged = false;
+		boolean fieldHasChanged[] = new boolean[this.furnaceTE.getFieldCount()];
+		if (cachedFields == null) {
+			cachedFields = new int[this.furnaceTE.getFieldCount()];
+			allFieldsHaveChanged = true;
+		}
+		for (int i = 0; i < cachedFields.length; ++i) {
+			if (allFieldsHaveChanged || cachedFields[i] != this.furnaceTE.getField(i)) {
+				cachedFields[i] = this.furnaceTE.getField(i);
+				fieldHasChanged[i] = true;
+			}
+		}
+
+		// go through the list of listeners (players using this container) and update them if necessary
+		for (IContainerListener listener : this.listeners) {
+			for (int fieldID = 0; fieldID < this.furnaceTE.getFieldCount(); ++fieldID) {
+				if (fieldHasChanged[fieldID]) {
+					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
+					listener.sendProgressBarUpdate(this, fieldID, cachedFields[fieldID]);
+				}
+			}
+		}
+	}
+
+	// Called when a progress bar update is received from the server. The two values (id and data) are the same two
+	// values given to sendProgressBarUpdate.  In this case we are using fields so we just pass them to the tileEntity.
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void updateProgressBar(int id, int data) {
+		this.furnaceTE.setField(id, data);
 	}
 
 	@Override

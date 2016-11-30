@@ -41,7 +41,6 @@ public class CommonProxy {
 	public void init(FMLInitializationEvent e) {
 		GameRegistry.registerWorldGenerator(new PrimordialWorldGen(), 0);
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-		//FMLInterModComms.sendMessage("EnderCore", "addRightClickCrop", "primordialcrops2:CoalSeed|primordialcrops2:cropCoal|15|13");
 		ModRecipes.init();
 	}
 

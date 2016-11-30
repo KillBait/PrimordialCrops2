@@ -20,7 +20,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -37,9 +36,20 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 	public static final int INPUT_SLOT = 2;
 	public static final int OUTPUT_SLOT = 3;
 	public static final int TOTALSLOTS = 4;
-	private ItemStack[] itemStacks = new ItemStack[4];
+	private ItemStack[] itemStacks = new ItemStack[TOTALSLOTS];
 
-	private ItemStack input;
+	/**
+	 * The number of ticks the current item has been cooking
+	 */
+	private short cookTime;
+
+	/**
+	 * The number of ticks required to cook an item
+	 */
+	private static final short COOK_TIME_BASE_MAX = 200;  // vanilla value is 200 = 10 seconds
+
+
+	/*private ItemStack input;
 	private ItemStack output;
 	private ItemStack fuel;
 	private ItemStack catalyst;
@@ -47,9 +57,9 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 	protected ItemStackHandler inputSlot;
 	protected ItemStackHandler outputSlot;
 	protected ItemStackHandler fuelSlot;
-	protected ItemStackHandler catalystSlot;
+	protected ItemStackHandler catalystSlot;*/
 
-	private String customName;
+	/*private String customName;*/
 
 	/*public FurnaceTileEntity() {
 		inputSlot = new ItemStackHandler();
@@ -142,10 +152,10 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 			}
 		}
 
-		if (compound.hasKey("CustomName", 8)) {
+		/*if (compound.hasKey("CustomName", 8)) {
 			LogHelper.info("Reading Name");
 			this.customName = compound.getString("CustomName");
-		}
+		}*/
 	}
 
 	@Override
@@ -164,10 +174,10 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		// the array of hashmaps is then inserted into the parent hashmap for the container
 		compound.setTag("Items", dataForAllSlots);
 
-		if (this.hasCustomName()) {
+		/*if (this.hasCustomName()) {
 			LogHelper.info("saving name");
 			compound.setString("CustomName", this.customName);
-		}
+		}*/
 		return compound;
 	}
 
@@ -383,23 +393,24 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 	}
 
 	@Override
+	public void clear() {
+		Arrays.fill(itemStacks, null);
+	}
+
+	@Override
 	public int getField(int id) {
+		LogHelper.info("getField = " + id);
 		return 0;
 	}
 
 	@Override
 	public void setField(int id, int value) {
-
+		LogHelper.info("setField = " + id + " , Value = " + value);
 	}
 
 	@Override
 	public int getFieldCount() {
 		return 0;
-	}
-
-	@Override
-	public void clear() {
-
 	}
 
 	@Override
