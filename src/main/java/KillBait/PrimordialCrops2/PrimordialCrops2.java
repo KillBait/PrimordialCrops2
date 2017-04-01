@@ -3,11 +3,14 @@ package KillBait.PrimordialCrops2;
 import KillBait.PrimordialCrops2.Registry.ModItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Jon on 30/09/2016.
@@ -27,10 +30,8 @@ public class PrimordialCrops2 {
 
 	public static CreativeTabs PrimordialCrops2 = new CreativeTabs("PrimordialCrops2") {
 		@Override
-		public Item getTabIconItem() {
-			return ModItems.minicioSeed;
-		}
-
+		@SideOnly(Side.CLIENT)
+		public ItemStack getTabIconItem() { return new ItemStack(ModItems.minicioSeed);	}
 	};
 
 

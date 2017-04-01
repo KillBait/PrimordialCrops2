@@ -1,10 +1,9 @@
 package KillBait.PrimordialCrops2.Blocks.Machines.Furnace;
 
+import KillBait.PrimordialCrops2.Utils.LogHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.*;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,31 +14,49 @@ import java.awt.*;
 /**
  * Created by Jon on 20/10/2016.
  */
-public class FurnaceContainer extends Container {
+public class FurnaceContainer extends Container{
 
 	private FurnaceTileEntity furnaceTE;
 	private int[] cachedFields;
+
 	private Point slotcoord_input = new Point(56, 17);
 	private Point slotcoord_fuel = new Point(56, 53);
 	private Point slotcoord_output = new Point(116, 35);
 	private Point slotcoord_catalyst = new Point(21, 35);
 
+	public static final int TOTAL_CATALYST_SLOTS = 1;
+	public static final int TOTAL_FUEL_SLOTS = 1;
+	public static final int TOTAL_INPUT_SLOTS = 1;
+	public static final int TOTAL_OUTPUT_SLOTS = 1;
+
+	public static final int FURNACE_SLOT_INDEX_START = 0;
+	public static final int FURNACE_SLOT_TOTAL = TOTAL_CATALYST_SLOTS + TOTAL_FUEL_SLOTS + TOTAL_INPUT_SLOTS + TOTAL_OUTPUT_SLOTS;
+
+	public static final int PLAYER_SLOT_INDEX_START = FURNACE_SLOT_TOTAL;
+	public static final int PLAYER_SLOT_TOTAL = 36;
+
+	public static final int CATALYST_SLOT_INDEX_START = 0;
+	public static final int FUEL_SLOT_INDEX_START = CATALYST_SLOT_INDEX_START + TOTAL_CATALYST_SLOTS;
+	public static final int INPUT_SLOT_INDEX_START = FUEL_SLOT_INDEX_START + TOTAL_FUEL_SLOTS;
+	public static final int OUTPT_SLOT_INDEX_START = INPUT_SLOT_INDEX_START + TOTAL_OUTPUT_SLOTS;
+
+
+
 	//private Point[] slotindex = new Point[4];
 
 
-	public FurnaceContainer(IInventory playerInventory, FurnaceTileEntity furnaceTE) {
-		this.furnaceTE = furnaceTE;
+	public FurnaceContainer(IInventory playerInventory, FurnaceTileEntity furnaceTile) {
+		this.furnaceTE = furnaceTile;
 
 		// This container references items out of our own inventory (the 9 slots we hold ourselves)
 		// as well as the slots from the player inventory so that the user can transfer items between
 		// both inventories. The two calls below make sure that slots are defined for both inventories.
-		addOwnSlots();
+		addMySlots(playerInventory);
 		addPlayerSlots(playerInventory);
 	}
 
-	private void addOwnSlots() {
-		//IItemHandler itemHandler = this.furnaceTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		//IItemHandler itemHandler = this.furnaceTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
+	private void addMySlots(IInventory playerInventory) {
+
 		/*Point[] slotcoords = {
 				new Point(56, 17), // input slot
 				new Point(56, 53), // fuel slot
@@ -47,74 +64,150 @@ public class FurnaceContainer extends Container {
 				new Point(21, 35) // catalyst slot
 		};*/
 
-		// Add our own slots
+		// Add our own slots, for loops are not rearly need, but there if multi slots are added
 		int slotIndex = 0;
-		addSlotToContainer(new SlotCatalyst(this.furnaceTE, slotIndex++, slotcoord_catalyst.x, slotcoord_catalyst.y));
-		//slotIndex++;
-		//itemHandler = this.furnaceTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
-		addSlotToContainer(new SlotFuel(this.furnaceTE, slotIndex++, slotcoord_fuel.x, slotcoord_fuel.y));
-		//slotIndex++;
-		//itemHandler = this.furnaceTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
-		addSlotToContainer(new SlotInput(this.furnaceTE, slotIndex++, slotcoord_input.x, slotcoord_input.y));
-		//slotIndex++;
-		//itemHandler = this.furnaceTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.SOUTH);
-		addSlotToContainer(new SlotOutput(this.furnaceTE, slotIndex++, slotcoord_output.x, slotcoord_output.y));
+
+		for (int x = 0; x < TOTAL_CATALYST_SLOTS; x++) {
+			addSlotToContainer(new SlotCatalyst(furnaceTE, slotIndex, slotcoord_catalyst.x, slotcoord_catalyst.y));
+			slotIndex++;
+		}
+
+		for (int x = 0; x < TOTAL_FUEL_SLOTS; x++) {
+			addSlotToContainer(new SlotFuel(furnaceTE, slotIndex, slotcoord_fuel.x, slotcoord_fuel.y));
+			slotIndex++;
+		}
+
+		for (int x = 0; x < TOTAL_INPUT_SLOTS; x++) {
+			addSlotToContainer(new SlotInput(furnaceTE, slotIndex, slotcoord_input.x, slotcoord_input.y));
+			slotIndex++;
+		}
+
+		for (int x = 0; x < TOTAL_OUTPUT_SLOTS; x++) {
+			addSlotToContainer(new SlotOutput(furnaceTE, slotIndex, slotcoord_output.x, slotcoord_output.y));
+			slotIndex++;
+		}
 	}
 
 	private void addPlayerSlots(IInventory playerInventory) {
 
+		// Slots for the hotbar
+		for (int row = 0; row < 9; ++row) {
+			int slot = row;
+			int x = 8 + row * 18;
+			int y = 72 + 70;
+			//LogHelper.info("hotbar slot" + slot);
+			this.addSlotToContainer(new Slot(playerInventory, slot, x, y));
+		}
+
 		// Slots for the main inventory
 		for (int row = 0; row < 3; ++row) {
 			for (int col = 0; col < 9; ++col) {
+				int slot = 9 + row * 9 + col;
 				int x = 8 + col * 18;
 				int y = row * 18 + 84;
-				this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 10, x, y));
+				//LogHelper.info("player slot " + slot);
+				this.addSlotToContainer(new Slot(playerInventory, slot, x, y));
 			}
 		}
 
-		// Slots for the hotbar
-		for (int row = 0; row < 9; ++row) {
-			int x = 8 + row * 18;
-			int y = 72 + 70;
-			this.addSlotToContainer(new Slot(playerInventory, row, x, y));
-		}
+
 	}
+
+	/*@Override
+	public void addListener(IContainerListener listener)
+	{
+		super.addListener(listener);
+		listener.sendAllWindowProperties(this, this.furnaceTE);
+	}*/
 
 	@Nullable
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-		ItemStack itemstack = null;
-		Slot slot = this.inventorySlots.get(index);
 
-		if (slot != null && slot.getHasStack()) {
+		Slot sourceSlot = (Slot)inventorySlots.get(index);
+		if (sourceSlot == null || !sourceSlot.getHasStack()) return ItemStack.EMPTY;
+		ItemStack sourceStack = sourceSlot.getStack();
+		ItemStack sourceStackCopy = sourceStack.copy();
+
+		//ItemStack itemstack = null;
+		//Slot slot = this.inventorySlots.get(index);
+
+		if (index >= FURNACE_SLOT_TOTAL && index < FURNACE_SLOT_TOTAL + PLAYER_SLOT_TOTAL) {
+			//LogHelper.info("Transfer from player slot " + index);
+			if (FurnaceTileEntity.isItemValidForCatalystSlot(sourceStack)) {
+				//LogHelper.info("Catalyst item");
+				if (!mergeItemStack(sourceStack, FURNACE_SLOT_INDEX_START, FURNACE_SLOT_INDEX_START + TOTAL_CATALYST_SLOTS, false)) {
+					//LogHelper.info("Unaable to move stack");
+					return ItemStack.EMPTY;
+				}
+			}else if (FurnaceTileEntity.getItemBurnTime(sourceStack) > 0) {
+				//LogHelper.info("Burable item");
+				if (!mergeItemStack(sourceStack, FUEL_SLOT_INDEX_START, FUEL_SLOT_INDEX_START + TOTAL_FUEL_SLOTS, false)) {
+					return ItemStack.EMPTY;
+				}
+			}else if (!FurnaceTileEntity.getSmeltingResult(sourceStack).isEmpty()) {
+				//LogHelper.info("Smeltable item");
+				if (!mergeItemStack(sourceStack, INPUT_SLOT_INDEX_START, INPUT_SLOT_INDEX_START + TOTAL_INPUT_SLOTS, false)) {
+					return ItemStack.EMPTY;
+				}
+			}else{
+				//LogHelper.info("none catalyst/burnable/smeltable");
+				return ItemStack.EMPTY;
+			}
+
+		} else if (index >= FURNACE_SLOT_INDEX_START && index < FURNACE_SLOT_INDEX_START + FURNACE_SLOT_TOTAL) {
+			//LogHelper.info("Transfer from furnace slot " + index);
+			if (!mergeItemStack(sourceStack, PLAYER_SLOT_INDEX_START, PLAYER_SLOT_INDEX_START + PLAYER_SLOT_TOTAL, false)) {
+				return ItemStack.EMPTY;
+			}
+
+		} else {
+			LogHelper.error("Invalid Slot Index " + index);
+			return ItemStack.EMPTY;
+		}
+
+		if (sourceStack.isEmpty()) {
+			sourceSlot.putStack(ItemStack.EMPTY);
+		} else {
+			sourceSlot.onSlotChanged();
+		}
+
+		/*sourceSlot.onTake(playerIn, sourceStack);*/
+		sourceSlot.onSlotChanged();
+
+		//sourceSlot.;
+		return sourceStackCopy;
+
+		/*if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (index < FurnaceTileEntity.TOTALSLOTS) {
-				if (!this.mergeItemStack(itemstack1, FurnaceTileEntity.TOTALSLOTS, this.inventorySlots.size(), true)) {
+			if (index < FurnaceTileEntity.TOTAL_SLOTS) {
+				if (!this.mergeItemStack(itemstack1, FurnaceTileEntity.TOTAL_SLOTS, this.inventorySlots.size(), true)) {
 					return null;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 0, FurnaceTileEntity.TOTALSLOTS, false)) {
+			} else if (!this.mergeItemStack(itemstack1, 0, FurnaceTileEntity.TOTAL_SLOTS, false)) {
 				return null;
 			}
 
-			if (itemstack1.stackSize == 0) {
-				slot.putStack(null);
+			if (itemstack1.getCount()== 0) {
+				slot.putStack(ItemStack.EMPTY); // 1.10 slot.putStack(null);
 			} else {
 				slot.onSlotChanged();
 			}
 
-			slot.onPickupFromSlot(playerIn, itemstack1);
+			slot.onTake(playerIn, itemstack1);
 
 		}
 
 
-		return itemstack;
+		return itemstack;*/
 	}
 
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
+
 
 		boolean allFieldsHaveChanged = false;
 		boolean fieldHasChanged[] = new boolean[this.furnaceTE.getFieldCount()];
@@ -124,7 +217,9 @@ public class FurnaceContainer extends Container {
 		}
 		for (int i = 0; i < cachedFields.length; ++i) {
 			if (allFieldsHaveChanged || cachedFields[i] != this.furnaceTE.getField(i)) {
+
 				cachedFields[i] = this.furnaceTE.getField(i);
+				//LogHelper.info("fieldchanged " + cachedFields[i]);
 				fieldHasChanged[i] = true;
 			}
 		}
@@ -134,6 +229,7 @@ public class FurnaceContainer extends Container {
 			for (int fieldID = 0; fieldID < this.furnaceTE.getFieldCount(); ++fieldID) {
 				if (fieldHasChanged[fieldID]) {
 					// Note that although sendProgressBarUpdate takes 2 ints on a server these are truncated to shorts
+					//LogHelper.info("Sending changes");
 					listener.sendProgressBarUpdate(this, fieldID, cachedFields[fieldID]);
 				}
 			}
@@ -150,7 +246,7 @@ public class FurnaceContainer extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return furnaceTE.canInteractWith(playerIn);
+		return this.furnaceTE.canInteractWith(playerIn);
 	}
 
 	public class SlotFuel extends Slot {
@@ -161,6 +257,7 @@ public class FurnaceContainer extends Container {
 		// if false, player won't be able to insert the given item into this slot
 		@Override
 		public boolean isItemValid(ItemStack stack) {
+			//LogHelper.info("is valid fuel");
 			return FurnaceTileEntity.isItemValidForFuelSlot(stack);
 		}
 	}
@@ -174,6 +271,7 @@ public class FurnaceContainer extends Container {
 		// if false, player won't be able to insert the given item into this slot
 		@Override
 		public boolean isItemValid(ItemStack stack) {
+			//LogHelper.info("is valid input");
 			return FurnaceTileEntity.isItemValidForInputSlot(stack);
 		}
 	}
@@ -187,6 +285,7 @@ public class FurnaceContainer extends Container {
 		// if false, player won't be able to insert the given item into this slot
 		@Override
 		public boolean isItemValid(ItemStack stack) {
+			//LogHelper.info("is valid output");
 			return FurnaceTileEntity.isItemValidForOutputSlot(stack);
 		}
 	}
@@ -200,6 +299,7 @@ public class FurnaceContainer extends Container {
 		// if false, player won't be able to insert the given item into this slot
 		@Override
 		public boolean isItemValid(ItemStack stack) {
+			//LogHelper.info("is valid catalyst");
 			return FurnaceTileEntity.isItemValidForCatalystSlot(stack);
 		}
 	}

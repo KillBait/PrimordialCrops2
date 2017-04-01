@@ -4,6 +4,7 @@ import KillBait.PrimordialCrops2.Compat.TheOneProbe.TOPInfoProvider;
 import KillBait.PrimordialCrops2.Compat.WAILA.WailaInfoProvider;
 import KillBait.PrimordialCrops2.Registry.ModBlocks;
 import KillBait.PrimordialCrops2.Registry.ModItems;
+import KillBait.PrimordialCrops2.Utils.LogHelper;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -161,7 +162,7 @@ public class PrimordialCropBlock extends BlockCrops implements IGrowable, IPlant
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-									ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+									EnumFacing side, float hitX, float hitY, float hitZ) {
 		//LogHelper.info("block activated with meta" + getMetaFromState(state));
 		/*if (this.getAge(state) >= 3) {
 			if(world.isRemote) {
@@ -180,19 +181,19 @@ public class PrimordialCropBlock extends BlockCrops implements IGrowable, IPlant
 	public int getFarmlandBonus(IBlockAccess world, BlockPos pos) {
 		Block getblock = world.getBlockState(pos.down()).getBlock();
 		if (getblock == ModBlocks.accioFarmland) {
-			//LogHelper.info("Accio infused farmland detected");
-			return 1;
-		}
-		if (getblock == ModBlocks.crucioFarmland) {
-			//LogHelper.info("Crucio infused farmland detected");
+			LogHelper.info("Accio infused farmland detected");
 			return 2;
 		}
-		if (getblock == ModBlocks.imperioFarmland) {
-			//LogHelper.info("Imperio infused farmland detected");
+		if (getblock == ModBlocks.crucioFarmland) {
+			LogHelper.info("Crucio infused farmland detected");
 			return 4;
 		}
+		if (getblock == ModBlocks.imperioFarmland) {
+			LogHelper.info("Imperio infused farmland detected");
+			return 6;
+		}
 		if (getblock == ModBlocks.zivicioFarmland) {
-			//LogHelper.info("Zivicio infused farmland detected");
+			LogHelper.info("Zivicio infused farmland detected");
 			return 8;
 		}
 

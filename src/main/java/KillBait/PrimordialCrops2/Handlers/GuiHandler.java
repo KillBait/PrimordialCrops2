@@ -25,7 +25,8 @@ public class GuiHandler implements IGuiHandler {
 				BlockPos pos = new BlockPos(x, y, z);
 				TileEntity te = world.getTileEntity(pos);
 				if (te instanceof FurnaceTileEntity) {
-					return new FurnaceContainer(player.inventory, (FurnaceTileEntity) te);
+					FurnaceTileEntity tileFurnace = (FurnaceTileEntity) te;
+					return new FurnaceContainer(player.inventory, tileFurnace);
 				}
 				break;
 		}
@@ -43,8 +44,8 @@ public class GuiHandler implements IGuiHandler {
 				BlockPos pos = new BlockPos(x, y, z);
 				TileEntity te = world.getTileEntity(pos);
 				if (te instanceof FurnaceTileEntity) {
-					FurnaceTileEntity furnaceTileEntity = (FurnaceTileEntity) te;
-					return new FurnaceGUIContainer(player.inventory, furnaceTileEntity);
+					FurnaceTileEntity tileFurnace = (FurnaceTileEntity) te;
+					return new FurnaceGUIContainer(player.inventory, tileFurnace);
 				}
 				break;
 		}

@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,7 +30,7 @@ public class CraftEssence extends PrimordialItemBase implements ItemModelProvide
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		subItems.add(new ItemStack(itemIn, 1, 0));
 		subItems.add(new ItemStack(itemIn, 1, 1));
 		subItems.add(new ItemStack(itemIn, 1, 2));
@@ -44,19 +45,19 @@ public class CraftEssence extends PrimordialItemBase implements ItemModelProvide
 		list.add("\u00A7aAs a catalyst in primordial furnace gives ");
 		switch (stack.getMetadata()) {
 			case 0:
-				list.add("100% speed increase, 50% chance of second output");
+				list.add("2x speed increase, 50% chance of second output");
 				break;
 			case 1:
-				list.add("200% speed increase, 100% chance of second output");
+				list.add("4x speed increase, 100% chance of second output");
 				break;
 			case 2:
-				list.add("400% speed increase, 150% chance of second output");
+				list.add("6x speed increase, 150% chance of second output");
 				break;
 			case 3:
-				list.add("600% speed increase, 200% chance of second output");
+				list.add("8x speed increase, 200% chance of second output");
 				break;
 			case 4:
-				list.add("1000% speed increase, 300% chance of second output");
+				list.add("10x speed increase, 300% chance of second output");
 				break;
 		}
 	}

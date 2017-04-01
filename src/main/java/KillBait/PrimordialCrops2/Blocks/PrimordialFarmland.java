@@ -112,9 +112,10 @@ public class PrimordialFarmland extends BlockFarmland {
 	 * change. Cases may include when redstone power is updated, cactus blocks popping off due to a neighboring solid
 	 * block, etc.
 	 */
+
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
-		super.neighborChanged(state, worldIn, pos, blockIn);
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+		super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 
 		if (worldIn.getBlockState(pos.up()).getMaterial().isSolid()) {
 			worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());

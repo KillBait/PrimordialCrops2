@@ -5,7 +5,7 @@ import KillBait.PrimordialCrops2.Blocks.Farmland.CrucioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Farmland.ImperioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Farmland.ZivicioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Machines.Furnace.PrimordialFurnace;
-import KillBait.PrimordialCrops2.Blocks.PrimordialBlock;
+import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
 import KillBait.PrimordialCrops2.Blocks.PrimordialFarmland;
 import KillBait.PrimordialCrops2.Blocks.PrimordialOre;
 import KillBait.PrimordialCrops2.Blocks.Soil.AccioInfusedDirt;
@@ -26,10 +26,10 @@ public class ModBlocks {
 	public static PrimordialOre oreAccio;
 	public static PrimordialOre oreCrucio;
 
-	public static PrimordialBlock accioInfusedDirt;
-	public static PrimordialBlock crucioInfusedDirt;
-	public static PrimordialBlock imperioInfusedDirt;
-	public static PrimordialBlock zivicioInfusedDirt;
+	public static PrimordialBlockBase accioInfusedDirt;
+	public static PrimordialBlockBase crucioInfusedDirt;
+	public static PrimordialBlockBase imperioInfusedDirt;
+	public static PrimordialBlockBase zivicioInfusedDirt;
 
 	public static PrimordialFarmland accioFarmland;
 	public static PrimordialFarmland crucioFarmland;

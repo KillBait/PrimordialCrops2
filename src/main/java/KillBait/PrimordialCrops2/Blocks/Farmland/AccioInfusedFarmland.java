@@ -11,9 +11,8 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-/**
- * Created by Jon on 11/10/2016.
- */
+// Fall damage resistant
+
 public class AccioInfusedFarmland extends PrimordialFarmland {
 
 	public AccioInfusedFarmland() {

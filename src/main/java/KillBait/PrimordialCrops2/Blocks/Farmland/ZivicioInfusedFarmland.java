@@ -11,9 +11,8 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-/**
- * Created by Jon on 12/10/2016.
- */
+// Fall Damage/Explosion Resistant, no water source needed, another TBD
+
 public class ZivicioInfusedFarmland extends PrimordialFarmland {
 
 	public ZivicioInfusedFarmland() {

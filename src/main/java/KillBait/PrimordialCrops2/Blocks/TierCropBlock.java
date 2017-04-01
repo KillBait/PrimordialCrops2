@@ -35,6 +35,8 @@ import java.util.Random;
 /**
  * Created by Jon on 30/09/2016.
  */
+
+// unused - most auto farming blocks dont trigger forge events on place, so we cant set the tier on placement.
 public class TierCropBlock extends BlockCrops implements IGrowable, IPlantable, TOPInfoProvider, WailaInfoProvider {
 
 	public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 3);
@@ -189,7 +191,7 @@ public class TierCropBlock extends BlockCrops implements IGrowable, IPlantable, 
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-									ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+									EnumFacing side, float hitX, float hitY, float hitZ) {
 		//LogHelper.info("block activated with meta" + getMetaFromState(state));
 		/*if (this.getAge(state) >= 3) {
 			if(world.isRemote) {

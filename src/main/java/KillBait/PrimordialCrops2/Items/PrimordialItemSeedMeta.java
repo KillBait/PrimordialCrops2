@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -52,7 +53,7 @@ public class PrimordialItemSeedMeta extends Item implements net.minecraftforge.c
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		subItems.add(new ItemStack(itemIn, 1, 0));
 		subItems.add(new ItemStack(itemIn, 1, 1));
 		subItems.add(new ItemStack(itemIn, 1, 2));
@@ -74,7 +75,7 @@ public class PrimordialItemSeedMeta extends Item implements net.minecraftforge.c
 				worldIn.setBlockState(pos.up(), this.crops.getDefaultState().withProperty(TIER, Integer.valueOf(this.getMetadata(stack))), 2);*/
 			worldIn.setBlockState(pos.up(), this.crops.getDefaultState());
 			/*}*/
-			--stack.stackSize;
+			stack.shrink(-1);
 			return EnumActionResult.SUCCESS;
 		} else {
 			return EnumActionResult.FAIL;

@@ -6,7 +6,7 @@ import net.minecraft.block.material.Material;
 /**
  * Created by Jon on 02/10/2016.
  */
-public class PrimordialOre extends PrimordialBlock {
+public class PrimordialOre extends PrimordialBlockBase {
 
 	public PrimordialOre(String unlocalizedName) {
 		super(Material.ROCK, unlocalizedName);

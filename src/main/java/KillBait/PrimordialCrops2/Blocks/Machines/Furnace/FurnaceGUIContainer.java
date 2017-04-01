@@ -57,21 +57,25 @@ public class FurnaceGUIContainer extends GuiContainer {
 		// cook progress is a double between 0 (0%) and 1 (100%)
 		// catalyst remaining is a double between 100 (full) to 0 (Empty)
 		// fuel remaining is a double between 100 (full) to 0 (Empty)
-		double cookProgress = 100;//tileEntity.fractionOfCookTimeComplete();
+		double cookProgress = furnaceTE.fractionOfCookTimeComplete();
 		// draw the cook progress bar
 		drawTexturedModalRect(guiLeft + progbar_cord.x, guiTop + progbar_cord.y, progbar_uv.x, progbar_uv.y, (int) (cookProgress * progbar_size.x), progbar_size.y);
 
-		int yOffset = (int) (flame_size.y * cookProgress);
+		//int yOffset = (int) (flame_size.y * cookProgress);
+
+		double burnRemaining = this.furnaceTE.fractionOfFuelRemaining(0);
+		int yOffset = (int)((1.0 - burnRemaining) * flame_size.y);
 
 		drawTexturedModalRect(guiLeft + flame_cord.x, guiTop + flame_cord.y + yOffset, flame_uv.x, flame_uv.y + yOffset, flame_size.x, flame_size.y - yOffset);
 
-		int cyOffset = (int) (catalyst_size.y * cookProgress);
+		double catalystRemaining = this.furnaceTE.fractionOfCatalystRemaining(0);
+		int cyOffset = (int) ((1.0 - catalystRemaining) * catalyst_size.y);
 
 		drawTexturedModalRect(guiLeft + catalyst_cord.x, guiTop + catalyst_cord.y + cyOffset, catalyst_uv.x, catalyst_uv.y + cyOffset, catalyst_size.x, catalyst_size.y - cyOffset);
 
-		String s = furnaceTE.getDisplayName().getUnformattedText();
+		/*String s = furnaceTE.getDisplayName().getUnformattedText();
 		this.fontRendererObj.drawString(s, guiLeft + (this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2), guiTop + 6, 4210752);
-		this.fontRendererObj.drawString(this.playerInv.getDisplayName().getUnformattedText(), guiLeft + 8, guiTop + (this.ySize - 96 + 2), 4210752);
+		this.fontRendererObj.drawString(this.playerInv.getDisplayName().getUnformattedText(), guiLeft + 8, guiTop + (this.ySize - 96 + 2), 4210752);*/
 
 	}
 

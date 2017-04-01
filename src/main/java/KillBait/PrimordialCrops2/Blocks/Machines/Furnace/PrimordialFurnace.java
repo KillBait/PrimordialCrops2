@@ -1,5 +1,6 @@
 package KillBait.PrimordialCrops2.Blocks.Machines.Furnace;
 
+import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
 import KillBait.PrimordialCrops2.Blocks.PrimordialBlockContainer;
 import KillBait.PrimordialCrops2.PrimordialCrops2;
 import KillBait.PrimordialCrops2.Utils.LogHelper;
@@ -11,6 +12,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -41,7 +43,7 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 
 	public PrimordialFurnace() {
 		super(Material.ROCK, "PrimordialFurnace");
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		//setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 		GameRegistry.registerTileEntity(FurnaceTileEntity.class, MODID + "_tileentity");
 	}
 
@@ -51,13 +53,11 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side,
-									float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side,float hitX, float hitY, float hitZ) {
 		// Only execute on the server
-		if (world.isRemote) {
-			return true;
+		if (!world.isRemote) {
+			player.openGui(PrimordialCrops2.instance, GUI_ID, world, pos.getX(), pos.getY(), pos.getZ());
 		}
-		player.openGui(PrimordialCrops2.instance, GUI_ID, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 
@@ -70,18 +70,18 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 		if (tileEntity instanceof IInventory) {
-			LogHelper.info("dropping minventory");
+			LogHelper.info("dropping inventory");
 			InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileEntity);
 		}
-		// we MUST call super last, it removes the tileentity
+		// super call removes the tileentity
 		super.breakBlock(worldIn, pos, state);
 	}
 
 	//remove neighborChanged when furnace working
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
-		int powered = world.isBlockIndirectlyGettingPowered(pos);
-		world.setBlockState(pos, state.withProperty(WORKING, powered > 0), 3);
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
+		int powered = worldIn.isBlockIndirectlyGettingPowered(pos);
+		worldIn.setBlockState(pos, state.withProperty(WORKING, powered > 0), 3);
 	}
 
 	// Un-needed???
@@ -122,7 +122,7 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 	}
 
 	@SideOnly(Side.CLIENT)
-	//@SuppressWarnings("incomplete-switch")
+	@SuppressWarnings("incomplete-switch")
 	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
 		if (stateIn.getValue(WORKING)) {
 			EnumFacing enumfacing = (EnumFacing) stateIn.getValue(FACING);
@@ -153,6 +153,34 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D, new int[0]);
 					worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D, new int[0]);
 			}
+		}
+	}
+
+	public static void setState(boolean active, World worldIn, BlockPos pos)
+	{
+		IBlockState iblockstate = worldIn.getBlockState(pos);
+		TileEntity tileentity = worldIn.getTileEntity(pos);
+		//keepInventory = true;
+
+		/*if (active)
+		{
+			worldIn.setBlockState(pos, iblockstate.withProperty(WORKING, active), 3);
+			//worldIn.setBlockState(pos, Blocks.LIT_FURNACE.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+			//worldIn.setBlockState(pos, Blocks.LIT_FURNACE.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+		}
+		else
+		{*/
+			worldIn.setBlockState(pos, iblockstate.withProperty(WORKING, active), 3);
+			//worldIn.setBlockState(pos, Blocks.FURNACE.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+			//worldIn.setBlockState(pos, Blocks.FURNACE.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+		/*}*/
+
+		//keepInventory = false;
+
+		if (tileentity != null)
+		{
+			tileentity.validate();
+			worldIn.setTileEntity(pos, tileentity);
 		}
 	}
 }

@@ -33,7 +33,7 @@ public class ModItems {
 		coalSeed = register(new PrimordialItemSeed(ModCrops.coalCrop, Blocks.FARMLAND, "CoalSeed"));
 
 		coalEssence = register(new PrimordialItemBase("CoalEssence"));
-		//minicioEssence = register(new PrimordialItemBase("MinicioEssence"));
+		minicioEssence = register(new PrimordialItemBase("MinicioEssence"));
 	}
 
 	private static <T extends Item> T register(T item) {
