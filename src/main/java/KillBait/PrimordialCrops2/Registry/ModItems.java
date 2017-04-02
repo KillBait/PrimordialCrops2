@@ -1,13 +1,18 @@
 package KillBait.PrimordialCrops2.Registry;
 
+import KillBait.PrimordialCrops2.Blocks.Soil.InfusedDirt;
 import KillBait.PrimordialCrops2.Items.Essence.CraftEssence;
+import KillBait.PrimordialCrops2.Items.ItemBlocks.ItemBlock_InfusedDirt;
 import KillBait.PrimordialCrops2.Items.Misc.Fertilizer;
 import KillBait.PrimordialCrops2.Items.PrimordialItemBase;
 import KillBait.PrimordialCrops2.Items.PrimordialItemSeed;
 import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import static KillBait.PrimordialCrops2.Registry.ModBlocks.infusedDirt;
 
 /**
  * Created by Jon on 02/10/2016.
@@ -21,6 +26,7 @@ public class ModItems {
 	public static PrimordialItemSeed coalSeed;
 	public static Fertilizer essenceFertilizer;
 	public static CraftEssence essenceCrafting;
+	public static ItemBlock infusedDirtItem;
 
 
 
@@ -34,6 +40,8 @@ public class ModItems {
 
 		coalEssence = register(new PrimordialItemBase("CoalEssence"));
 		minicioEssence = register(new PrimordialItemBase("MinicioEssence"));
+
+		infusedDirtItem = register(new ItemBlock_InfusedDirt(ModBlocks.infusedDirt));
 	}
 
 	private static <T extends Item> T register(T item) {

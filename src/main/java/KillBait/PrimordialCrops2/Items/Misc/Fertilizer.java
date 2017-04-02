@@ -34,7 +34,7 @@ public class Fertilizer extends PrimordialItemBase implements ItemModelProvider 
 		subItems.add(new ItemStack(itemIn, 1, 0));
 		subItems.add(new ItemStack(itemIn, 1, 1));
 		subItems.add(new ItemStack(itemIn, 1, 2));
-		//subItems.add(new ItemStack(itemIn, 1, 3));
+		subItems.add(new ItemStack(itemIn, 1, 3));
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class Fertilizer extends PrimordialItemBase implements ItemModelProvider 
 		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 0, "Fertilizer");
 		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 1, "CrucioFertilizer");
 		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 2, "ImperioFertilizer");
-		//PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 3, "ZivicioFertilizer");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 3, "ZivicioFertilizer");
 
 	}
 }

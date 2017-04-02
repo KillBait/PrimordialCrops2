@@ -637,6 +637,7 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		return MathHelper.clamp(fraction, 0.0, 1.0);
 	}
 
+	// TODO remove if not used
 	public int secondsOfFuelRemaining(int fuelSlot)
 	{
 		if (burnTimeRemaining <= 0 ) {

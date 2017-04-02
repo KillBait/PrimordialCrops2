@@ -3,6 +3,7 @@ package KillBait.PrimordialCrops2.Items;
 import KillBait.PrimordialCrops2.Blocks.PrimordialCropBlock;
 import KillBait.PrimordialCrops2.PrimordialCrops2;
 import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
+import KillBait.PrimordialCrops2.Utils.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -39,15 +40,19 @@ public class PrimordialItemSeed extends Item implements net.minecraftforge.commo
 	/**
 	 * Called when a Block is right-clicked with this Item
 	 */
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
+	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		LogHelper.info("right click");
 
 		ItemStack itemstack = player.getHeldItem(hand);
 		net.minecraft.block.state.IBlockState state = worldIn.getBlockState(pos);
 		if (facing == EnumFacing.UP && player.canPlayerEdit(pos.offset(facing), facing, itemstack) && state.getBlock().canSustainPlant(state, worldIn, pos, EnumFacing.UP, this) && worldIn.isAirBlock(pos.up())) {
+			LogHelper.info("planting");
 			worldIn.setBlockState(pos.up(), this.crops.getDefaultState());
-			stack.shrink(-1);
+			itemstack.shrink(-1);
 			return EnumActionResult.SUCCESS;
 		} else {
+			LogHelper.info("Failed");
 			return EnumActionResult.FAIL;
 		}
 	}

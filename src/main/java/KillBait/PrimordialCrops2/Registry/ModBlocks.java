@@ -6,12 +6,11 @@ import KillBait.PrimordialCrops2.Blocks.Farmland.ImperioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Farmland.ZivicioInfusedFarmland;
 import KillBait.PrimordialCrops2.Blocks.Machines.Furnace.PrimordialFurnace;
 import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
+import KillBait.PrimordialCrops2.Blocks.PrimordialBlockMeta;
 import KillBait.PrimordialCrops2.Blocks.PrimordialFarmland;
 import KillBait.PrimordialCrops2.Blocks.PrimordialOre;
-import KillBait.PrimordialCrops2.Blocks.Soil.AccioInfusedDirt;
-import KillBait.PrimordialCrops2.Blocks.Soil.CrucioInfusedDirt;
-import KillBait.PrimordialCrops2.Blocks.Soil.ImperioInfusedDirt;
-import KillBait.PrimordialCrops2.Blocks.Soil.ZivicioInfusedDirt;
+import KillBait.PrimordialCrops2.Blocks.Soil.*;
+import KillBait.PrimordialCrops2.Items.ItemBlocks.ItemBlock_InfusedDirt;
 import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
@@ -36,6 +35,8 @@ public class ModBlocks {
 	public static PrimordialFarmland imperioFarmland;
 	public static PrimordialFarmland zivicioFarmland;
 
+	public static PrimordialBlockMeta infusedDirt;
+
 	public static PrimordialFurnace furnace;
 
 	public static void init() {
@@ -47,6 +48,7 @@ public class ModBlocks {
 		crucioFarmland = register(new CrucioInfusedFarmland(), null);
 		imperioFarmland = register(new ImperioInfusedFarmland(), null);
 		zivicioFarmland = register(new ZivicioInfusedFarmland(), null);
+		infusedDirt = register(new InfusedDirt(), null);
 
 		accioInfusedDirt = register(new AccioInfusedDirt());
 		crucioInfusedDirt = register(new CrucioInfusedDirt());
