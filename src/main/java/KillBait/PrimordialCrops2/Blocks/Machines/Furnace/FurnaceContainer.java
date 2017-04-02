@@ -40,52 +40,21 @@ public class FurnaceContainer extends Container{
 	public static final int INPUT_SLOT_INDEX_START = FUEL_SLOT_INDEX_START + TOTAL_FUEL_SLOTS;
 	public static final int OUTPT_SLOT_INDEX_START = INPUT_SLOT_INDEX_START + TOTAL_OUTPUT_SLOTS;
 
-
-
-	//private Point[] slotindex = new Point[4];
-
-
 	public FurnaceContainer(IInventory playerInventory, FurnaceTileEntity furnaceTile) {
-		this.furnaceTE = furnaceTile;
 
-		// This container references items out of our own inventory (the 9 slots we hold ourselves)
-		// as well as the slots from the player inventory so that the user can transfer items between
-		// both inventories. The two calls below make sure that slots are defined for both inventories.
+		this.furnaceTE = furnaceTile;
 		addMySlots(playerInventory);
 		addPlayerSlots(playerInventory);
 	}
 
 	private void addMySlots(IInventory playerInventory) {
 
-		/*Point[] slotcoords = {
-				new Point(56, 17), // input slot
-				new Point(56, 53), // fuel slot
-				new Point(116, 35), // output slot
-				new Point(21, 35) // catalyst slot
-		};*/
-
-		// Add our own slots, for loops are not rearly need, but there if multi slots are added
+		// Add our own slots
 		int slotIndex = 0;
-
-		for (int x = 0; x < TOTAL_CATALYST_SLOTS; x++) {
-			addSlotToContainer(new SlotCatalyst(furnaceTE, slotIndex, slotcoord_catalyst.x, slotcoord_catalyst.y));
-			slotIndex++;
-		}
-
-		for (int x = 0; x < TOTAL_FUEL_SLOTS; x++) {
-			addSlotToContainer(new SlotFuel(furnaceTE, slotIndex, slotcoord_fuel.x, slotcoord_fuel.y));
-			slotIndex++;
-		}
-
-		for (int x = 0; x < TOTAL_INPUT_SLOTS; x++) {
-			addSlotToContainer(new SlotInput(furnaceTE, slotIndex, slotcoord_input.x, slotcoord_input.y));
-			slotIndex++;
-		}
-
-		for (int x = 0; x < TOTAL_OUTPUT_SLOTS; x++) {
-			addSlotToContainer(new SlotOutput(furnaceTE, slotIndex, slotcoord_output.x, slotcoord_output.y));
-			slotIndex++;
-		}
+		addSlotToContainer(new SlotCatalyst(furnaceTE, slotIndex++, slotcoord_catalyst.x, slotcoord_catalyst.y));
+		addSlotToContainer(new SlotFuel(furnaceTE, slotIndex++, slotcoord_fuel.x, slotcoord_fuel.y));
+		addSlotToContainer(new SlotInput(furnaceTE, slotIndex++, slotcoord_input.x, slotcoord_input.y));
+		addSlotToContainer(new SlotOutput(furnaceTE, slotIndex, slotcoord_output.x, slotcoord_output.y));
 	}
 
 	private void addPlayerSlots(IInventory playerInventory) {
@@ -113,13 +82,6 @@ public class FurnaceContainer extends Container{
 
 	}
 
-	/*@Override
-	public void addListener(IContainerListener listener)
-	{
-		super.addListener(listener);
-		listener.sendAllWindowProperties(this, this.furnaceTE);
-	}*/
-
 	@Nullable
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
@@ -128,9 +90,6 @@ public class FurnaceContainer extends Container{
 		if (sourceSlot == null || !sourceSlot.getHasStack()) return ItemStack.EMPTY;
 		ItemStack sourceStack = sourceSlot.getStack();
 		ItemStack sourceStackCopy = sourceStack.copy();
-
-		//ItemStack itemstack = null;
-		//Slot slot = this.inventorySlots.get(index);
 
 		if (index >= FURNACE_SLOT_TOTAL && index < FURNACE_SLOT_TOTAL + PLAYER_SLOT_TOTAL) {
 			//LogHelper.info("Transfer from player slot " + index);
@@ -162,7 +121,7 @@ public class FurnaceContainer extends Container{
 			}
 
 		} else {
-			LogHelper.error("Invalid Slot Index " + index);
+			LogHelper.error("Invalid Slot Index " + index + " in FurnaceContainer");
 			return ItemStack.EMPTY;
 		}
 
@@ -172,36 +131,7 @@ public class FurnaceContainer extends Container{
 			sourceSlot.onSlotChanged();
 		}
 
-		/*sourceSlot.onTake(playerIn, sourceStack);*/
-		sourceSlot.onSlotChanged();
-
-		//sourceSlot.;
 		return sourceStackCopy;
-
-		/*if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
-
-			if (index < FurnaceTileEntity.TOTAL_SLOTS) {
-				if (!this.mergeItemStack(itemstack1, FurnaceTileEntity.TOTAL_SLOTS, this.inventorySlots.size(), true)) {
-					return null;
-				}
-			} else if (!this.mergeItemStack(itemstack1, 0, FurnaceTileEntity.TOTAL_SLOTS, false)) {
-				return null;
-			}
-
-			if (itemstack1.getCount()== 0) {
-				slot.putStack(ItemStack.EMPTY); // 1.10 slot.putStack(null);
-			} else {
-				slot.onSlotChanged();
-			}
-
-			slot.onTake(playerIn, itemstack1);
-
-		}
-
-
-		return itemstack;*/
 	}
 
 	@Override
@@ -241,6 +171,7 @@ public class FurnaceContainer extends Container{
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void updateProgressBar(int id, int data) {
+		//LogHelper.info("id = " + id + " data " + data);
 		this.furnaceTE.setField(id, data);
 	}
 

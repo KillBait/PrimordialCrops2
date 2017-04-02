@@ -63,23 +63,24 @@ public class FurnaceGUIContainer extends GuiContainer {
 
 		//int yOffset = (int) (flame_size.y * cookProgress);
 
-		double burnRemaining = this.furnaceTE.fractionOfFuelRemaining(0);
+		double burnRemaining = this.furnaceTE.fractionOfFuelRemaining();
 		int yOffset = (int)((1.0 - burnRemaining) * flame_size.y);
 
 		drawTexturedModalRect(guiLeft + flame_cord.x, guiTop + flame_cord.y + yOffset, flame_uv.x, flame_uv.y + yOffset, flame_size.x, flame_size.y - yOffset);
 
-		double catalystRemaining = this.furnaceTE.fractionOfCatalystRemaining(0);
+		double catalystRemaining = this.furnaceTE.fractionOfCatalystRemaining();
 		int cyOffset = (int) ((1.0 - catalystRemaining) * catalyst_size.y);
 
 		drawTexturedModalRect(guiLeft + catalyst_cord.x, guiTop + catalyst_cord.y + cyOffset, catalyst_uv.x, catalyst_uv.y + cyOffset, catalyst_size.x, catalyst_size.y - cyOffset);
 
-		/*String s = furnaceTE.getDisplayName().getUnformattedText();
-		this.fontRendererObj.drawString(s, guiLeft + (this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2), guiTop + 6, 4210752);
-		this.fontRendererObj.drawString(this.playerInv.getDisplayName().getUnformattedText(), guiLeft + 8, guiTop + (this.ySize - 96 + 2), 4210752);*/
+
 
 	}
 
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		String s = furnaceTE.getDisplayName().getUnformattedText();
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6,  Color.darkGray.getRGB());
+		this.fontRenderer.drawString(this.playerInv.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, Color.darkGray.getRGB());
 
 	}
 

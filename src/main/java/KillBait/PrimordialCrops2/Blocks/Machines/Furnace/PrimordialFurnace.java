@@ -37,7 +37,7 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyBool WORKING = PropertyBool.create("enabled");
-	public static String furnaceName;
+	//public static String furnaceName;
 	public static final int GUI_ID = 1; // ID 1 reserved for in-game book
 
 
@@ -70,14 +70,13 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 		if (tileEntity instanceof IInventory) {
-			LogHelper.info("dropping inventory");
 			InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileEntity);
 		}
 		// super call removes the tileentity
 		super.breakBlock(worldIn, pos, state);
 	}
 
-	//remove neighborChanged when furnace working
+	/*//remove neighborChanged when furnace working
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		int powered = worldIn.isBlockIndirectlyGettingPowered(pos);
@@ -90,13 +89,17 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 		if (tileEntity instanceof FurnaceTileEntity) {
+
 			FurnaceTileEntity furnaceTileEntity = (FurnaceTileEntity) tileEntity;
-			//int burningSlots = furnaceTileEntity.numberOfBurningFuelSlots();
+			if (furnaceTileEntity.getField(0) > 0) {
+				World.setBlockState(pos, state.withProperty(WORKING, powered > 0), 3);
+			}
+			int burningSlots = TileEntity.numberOfBurningFuelSlots();
 			//burningSlots = MathHelper.clamp_int(burningSlots, 0, 4);
 			//return getDefaultState().withProperty(BURNING_SIDES_COUNT, burningSlots);
 		}
 		return state;
-	}
+	}*/
 
 
 	@Override

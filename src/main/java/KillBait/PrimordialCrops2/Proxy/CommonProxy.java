@@ -1,6 +1,5 @@
 package KillBait.PrimordialCrops2.Proxy;
 
-import KillBait.PrimordialCrops2.Blocks.Machines.Furnace.FurnaceTileEntity;
 import KillBait.PrimordialCrops2.Compat.CompatHandler;
 import KillBait.PrimordialCrops2.Handlers.EventHandler;
 import KillBait.PrimordialCrops2.Handlers.GuiHandler;
@@ -17,7 +16,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import static KillBait.PrimordialCrops2.Info.MODID;
 import static KillBait.PrimordialCrops2.PrimordialCrops2.instance;
 
 public class CommonProxy {
@@ -37,8 +35,6 @@ public class CommonProxy {
 
 
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
-
-
 	}
 
 	public void init(FMLInitializationEvent e) {

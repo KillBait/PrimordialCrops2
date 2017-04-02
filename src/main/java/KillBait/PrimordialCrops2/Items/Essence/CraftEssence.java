@@ -40,24 +40,24 @@ public class CraftEssence extends PrimordialItemBase implements ItemModelProvide
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-		list.add("\u00A7aUsed in crafting, ");
+		list.add("\u00A7aUsed in crafting.");
 		list.add(" ");
-		list.add("\u00A7aAs a catalyst in primordial furnace gives ");
+		list.add("As a catalyst in primordial furnace gives.");
 		switch (stack.getMetadata()) {
 			case 0:
-				list.add("2x speed increase, 50% chance of second output");
+				list.add("2x speed increase");
 				break;
 			case 1:
-				list.add("4x speed increase, 100% chance of second output");
+				list.add("4x speed increase");
 				break;
 			case 2:
-				list.add("6x speed increase, 150% chance of second output");
+				list.add("8x speed increase");
 				break;
 			case 3:
-				list.add("8x speed increase, 200% chance of second output");
+				list.add("20x speed increase");
 				break;
 			case 4:
-				list.add("10x speed increase, 300% chance of second output");
+				list.add("200x speed increase");
 				break;
 		}
 	}
