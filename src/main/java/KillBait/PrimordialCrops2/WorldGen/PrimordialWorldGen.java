@@ -24,8 +24,8 @@ public class PrimordialWorldGen implements IWorldGenerator {
 
 	public PrimordialWorldGen() {
 		this.MinicioOre = new WorldGenMinable(ModBlocks.oreMinicio.getDefaultState(), 6, BlockMatcher.forBlock(Blocks.STONE));
-		this.AccioOre = new WorldGenMinable(ModBlocks.oreAccio.getDefaultState(), 6, BlockMatcher.forBlock(Blocks.NETHERRACK));
-		this.CrucioOre = new WorldGenMinable(ModBlocks.oreCrucio.getDefaultState(), 7, BlockMatcher.forBlock(Blocks.END_STONE));
+		this.AccioOre = new WorldGenMinable(ModBlocks.oreAccio.getDefaultState(), 4, BlockMatcher.forBlock(Blocks.NETHERRACK));
+		this.CrucioOre = new WorldGenMinable(ModBlocks.oreCrucio.getDefaultState(), 2, BlockMatcher.forBlock(Blocks.END_STONE));
 
 	}
 

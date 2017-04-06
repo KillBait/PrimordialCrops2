@@ -2,7 +2,6 @@ package KillBait.PrimordialCrops2.Blocks.Machines.Furnace;
 
 import KillBait.PrimordialCrops2.Items.Essence.CraftEssence;
 import KillBait.PrimordialCrops2.Utils.LogHelper;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +22,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.items.ItemStackHandler;
-import scala.xml.dtd.EMPTY;
 
 import javax.annotation.Nullable;
 
@@ -32,12 +30,7 @@ import javax.annotation.Nullable;
  * Created by Jon on 20/10/2016.
  */
 
-
-
 	// TODO switch to ItemHandler capabilities
-	// TODO track down rare occurance that leaves a small amount of fuel on smelt finish, only seen it happen 1 time.
-
-
 
 public class FurnaceTileEntity extends TileEntity implements IInventory, ITickable{
 
@@ -127,7 +120,7 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 	@Override
 	public void update() {
 
-		// check Catalyst slot
+		// check if any catalyst available
 		checkCatalyst();
 
 		// Check if there's something in the input slot and fuel is available to smelt
@@ -142,8 +135,8 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 				smeltItem();
 				cookTime = 0;
 			}
-		} else {
-			cookTime = 0;
+		/*} else {
+			cookTime = 0;*/
 		}
 
 		// TODO add light when furnace on
@@ -151,13 +144,13 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		if (!world.isRemote) {
 			if (cookTime != lastCookTime) {
 				if (!emitParticles) {
-					LogHelper.info("Flame ON");
+					//LogHelper.info("Flame ON");
 					PrimordialFurnace.setState(true, this.world, this.pos);
 					emitParticles = true;
 				}
 			}else{
 				if (emitParticles) {
-					LogHelper.info("Flame OFF");
+					//LogHelper.info("Flame OFF");
 					PrimordialFurnace.setState(false, this.world, this.pos);
 					emitParticles = false;
 				}
@@ -196,7 +189,7 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 			if (!furnaceItemStacks.get(FUEL_SLOT).isEmpty() && getItemBurnTime(furnaceItemStacks.get(FUEL_SLOT)) > 0) {
 
 				burnTimeInitialValue = getItemBurnTime(furnaceItemStacks.get(FUEL_SLOT));
-				burnTimeRemaining = burnTimeInitialValue;
+				burnTimeRemaining = burnTimeInitialValue - (200 / COOK_TIME_FOR_COMPLETION);
 
 				// check if fuel in slot is a container item, i.e.  if it's a lava bucket, return the empty bucket
 				// otherwise reduce the fuel in slot by one.
@@ -209,9 +202,10 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 				}
 				// refresh the TileEntity
 				inventoryChanged = true;
+				fuelRemaining = true;
 			}
 		}else {
-			burnTimeRemaining -= (200 / COOK_TIME_FOR_COMPLETION); // TODO change reduction to whatever essence
+			burnTimeRemaining -= (200 / COOK_TIME_FOR_COMPLETION);
 			fuelRemaining = true;
 		}
 
@@ -256,12 +250,12 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 					if (furnaceItemStacks.get(INPUT_SLOT).getCount() <= 0) {
 						furnaceItemStacks.set(INPUT_SLOT, ItemStack.EMPTY);
 					}
-					LogHelper.info("Empty Slot");
+					//LogHelper.info("Empty Slot");
 					// check if any catalyst is left, if so, remove 1
 					if (currentCatalystRemaining > 0) {
 						currentCatalystRemaining--;
 					}
-					LogHelper.info("Catalyst remaining = " + currentCatalystRemaining);
+					//LogHelper.info("burnTimeRemaing = " + burnTimeRemaining);
 					markDirty();
 				} else {
 					if (outputStack.getItem() == smeltResult.getItem() && (!outputStack.getHasSubtypes() || outputStack.getMetadata() == outputStack.getMetadata())
@@ -280,12 +274,12 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 							if (furnaceItemStacks.get(INPUT_SLOT).getCount() <= 0) {
 								furnaceItemStacks.set(INPUT_SLOT, ItemStack.EMPTY);  //getStackSize(), EmptyItem
 							}
-							LogHelper.info("Merge Stacks");
+							//LogHelper.info("Merge Stacks");
 							// check if any catalyst is left, if so, remove 1 from total
 							if (currentCatalystRemaining > 0) {
 								currentCatalystRemaining--;
 							}
-							LogHelper.info("Catalyst remaining = " + currentCatalystRemaining);
+							//LogHelper.info("burnTimeRemaing = " + burnTimeRemaining);
 							markDirty();
 						}
 					}
@@ -469,7 +463,7 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 	// TODO - Add IMC registration for custom fuels that dont use minecraftforge.fml.common.IFuelHandler?
 
 	public static int getItemBurnTime(ItemStack stack) {
-		if (stack == null) {
+		if (stack.isEmpty()) {
 			return 0;
 		} else {
 			Item item = stack.getItem();

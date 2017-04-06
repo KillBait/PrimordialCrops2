@@ -1,16 +1,11 @@
 package KillBait.PrimordialCrops2.Registry;
 
-import KillBait.PrimordialCrops2.Blocks.Farmland.AccioInfusedFarmland;
-import KillBait.PrimordialCrops2.Blocks.Farmland.CrucioInfusedFarmland;
-import KillBait.PrimordialCrops2.Blocks.Farmland.ImperioInfusedFarmland;
-import KillBait.PrimordialCrops2.Blocks.Farmland.ZivicioInfusedFarmland;
+import KillBait.PrimordialCrops2.Blocks.InfusedDirtBlock;
 import KillBait.PrimordialCrops2.Blocks.Machines.Furnace.PrimordialFurnace;
-import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
-import KillBait.PrimordialCrops2.Blocks.PrimordialBlockMeta;
-import KillBait.PrimordialCrops2.Blocks.PrimordialFarmland;
-import KillBait.PrimordialCrops2.Blocks.PrimordialOre;
-import KillBait.PrimordialCrops2.Blocks.Soil.*;
-import KillBait.PrimordialCrops2.Items.ItemBlocks.ItemBlock_InfusedDirt;
+import KillBait.PrimordialCrops2.Blocks.Base.PrimordialBlockBase;
+import KillBait.PrimordialCrops2.Blocks.Base.PrimordialBlockMeta;
+import KillBait.PrimordialCrops2.Blocks.Base.PrimordialFarmland;
+import KillBait.PrimordialCrops2.Blocks.Base.PrimordialOre;
 import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
@@ -40,20 +35,20 @@ public class ModBlocks {
 	public static PrimordialFurnace furnace;
 
 	public static void init() {
-		oreMinicio = register(new PrimordialOre("oreMinicio"));
-		oreAccio = register(new PrimordialOre("oreAccio"));
-		oreCrucio = register(new PrimordialOre("oreCrucio"));
+		oreMinicio = register(new PrimordialOre("ore_minicio"));
+		oreAccio = register(new PrimordialOre("ore_accio"));
+		oreCrucio = register(new PrimordialOre("ore_crucio"));
 
-		accioFarmland = register(new AccioInfusedFarmland(), null);
+		/*accioFarmland = register(new AccioInfusedFarmland(), null);
 		crucioFarmland = register(new CrucioInfusedFarmland(), null);
 		imperioFarmland = register(new ImperioInfusedFarmland(), null);
-		zivicioFarmland = register(new ZivicioInfusedFarmland(), null);
-		infusedDirt = register(new InfusedDirt(), null);
+		zivicioFarmland = register(new ZivicioInfusedFarmland(), null);*/
+		infusedDirt = register(new InfusedDirtBlock(), null);
 
-		accioInfusedDirt = register(new AccioInfusedDirt());
+		/*accioInfusedDirt = register(new AccioInfusedDirt());
 		crucioInfusedDirt = register(new CrucioInfusedDirt());
 		imperioInfusedDirt = register(new ImperioInfusedDirt());
-		zivicioInfusedDirt = register(new ZivicioInfusedDirt());
+		zivicioInfusedDirt = register(new ZivicioInfusedDirt());*/
 
 		furnace = register(new PrimordialFurnace());
 	}

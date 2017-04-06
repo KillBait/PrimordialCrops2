@@ -14,6 +14,9 @@ import java.awt.*;
 /**
  * Created by Jon on 20/10/2016.
  */
+
+// TODO switch to ItemHandler capabilities
+
 public class FurnaceContainer extends Container{
 
 	private FurnaceTileEntity furnaceTE;

@@ -14,6 +14,9 @@
       "zivicio": {
         "model": "primordialcrops2:zivicioinfuseddirt"
       }
+    },
+    "inventory": {
+      "model": "cube_all"
     }
   }
 }

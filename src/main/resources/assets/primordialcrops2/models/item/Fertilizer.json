@@ -1,6 +1,0 @@
-{
-  "parent": "primordialcrops2:item/standardSeedItem",
-  "textures": {
-    "layer0": "primordialcrops2:items/AccioFertilizer"
-  }
-}

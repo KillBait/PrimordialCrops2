@@ -1,6 +1,6 @@
 package KillBait.PrimordialCrops2.Utils;
 
-import KillBait.PrimordialCrops2.Items.PrimordialItemSeed;
+import KillBait.PrimordialCrops2.Items.Base.PrimordialItemSeed;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;

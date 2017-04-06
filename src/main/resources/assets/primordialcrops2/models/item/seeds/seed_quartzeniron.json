@@ -1,0 +1,6 @@
+{
+  "parent": "primordialcrops2:item/seeds/standardSeedItem",
+  "textures": {
+    "layer0": "primordialcrops2:items/seeds/seed_quartzeniron"
+  }
+}

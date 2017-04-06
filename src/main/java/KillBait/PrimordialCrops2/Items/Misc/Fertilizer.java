@@ -1,6 +1,6 @@
 package KillBait.PrimordialCrops2.Items.Misc;
 
-import KillBait.PrimordialCrops2.Items.PrimordialItemBase;
+import KillBait.PrimordialCrops2.Items.Base.PrimordialItemBase;
 import KillBait.PrimordialCrops2.PrimordialCrops2;
 import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
 import net.minecraft.creativetab.CreativeTabs;
@@ -67,10 +67,10 @@ public class Fertilizer extends PrimordialItemBase implements ItemModelProvider 
 	@Override
 	public void registerItemModel(Item itemBlock) {
 
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 0, "Fertilizer");
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 1, "CrucioFertilizer");
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 2, "ImperioFertilizer");
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 3, "ZivicioFertilizer");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 0, "misc/accio_fertilizer");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 1, "misc/crucio_fertilizer");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 2, "misc/imperio_fertilizer");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 3, "misc/zivicio_fertilizer");
 
 	}
 }

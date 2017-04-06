@@ -1,0 +1,30 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cross"
+  },
+  "variants": {
+    "age": {
+      "0": {
+        "textures": {
+          "cross": "primordialcrops2:blocks/crops/crop_stage0"
+        }
+      },
+      "1": {
+        "textures": {
+          "cross": "primordialcrops2:blocks/crops/crop_stage1"
+        }
+      },
+      "2": {
+        "textures": {
+          "cross": "primordialcrops2:blocks/crops/crop_stage2"
+        }
+      },
+      "3": {
+        "textures": {
+          "cross": "primordialcrops2:blocks/crops/crop_blutonium"
+        }
+      }
+    }
+  }
+}

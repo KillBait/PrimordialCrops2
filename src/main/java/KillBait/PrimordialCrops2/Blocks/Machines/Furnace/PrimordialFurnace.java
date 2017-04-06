@@ -1,10 +1,12 @@
 package KillBait.PrimordialCrops2.Blocks.Machines.Furnace;
 
-import KillBait.PrimordialCrops2.Blocks.PrimordialBlockBase;
-import KillBait.PrimordialCrops2.Blocks.PrimordialBlockContainer;
+import KillBait.PrimordialCrops2.Blocks.Base.PrimordialBlockContainer;
+import KillBait.PrimordialCrops2.Compat.WAILA.WailaInfoProvider;
 import KillBait.PrimordialCrops2.PrimordialCrops2;
-import KillBait.PrimordialCrops2.Utils.LogHelper;
-import net.minecraft.block.Block;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.SpecialChars;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -17,15 +19,17 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
 import java.util.Random;
 
 import static KillBait.PrimordialCrops2.Info.MODID;
@@ -33,6 +37,9 @@ import static KillBait.PrimordialCrops2.Info.MODID;
 /**
  * Created by Jon on 19/10/2016.
  */
+
+	// TODO add light when smelting
+	// TODO New Model/Texture ?????
 public class PrimordialFurnace extends PrimordialBlockContainer {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
@@ -42,7 +49,9 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 
 
 	public PrimordialFurnace() {
-		super(Material.ROCK, "PrimordialFurnace");
+		super(Material.ROCK, "primordialfurnace");
+		this.setHardness(4f);
+		this.setSoundType(SoundType.STONE);
 		//setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 		GameRegistry.registerTileEntity(FurnaceTileEntity.class, MODID + "_tileentity");
 	}

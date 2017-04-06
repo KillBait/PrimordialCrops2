@@ -1,6 +1,6 @@
 package KillBait.PrimordialCrops2.Items.Essence;
 
-import KillBait.PrimordialCrops2.Items.PrimordialItemBase;
+import KillBait.PrimordialCrops2.Items.Base.PrimordialItemBase;
 import KillBait.PrimordialCrops2.PrimordialCrops2;
 import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
 import net.minecraft.creativetab.CreativeTabs;
@@ -65,11 +65,11 @@ public class CraftEssence extends PrimordialItemBase implements ItemModelProvide
 	@Override
 	public void registerItemModel(Item itemBlock) {
 
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 0, "MinicioEssence");
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 1, "AccioEssence");
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 2, "CrucioEssence");
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 3, "ImperioEssence");
-		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 4, "ZivicioEssence");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 0, "essence/essence_minicio");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 1, "essence/essence_accio");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 2, "essence/essence_crucio");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 3, "essence/essence_imperio");
+		PrimordialCrops2.proxy.registerItemRenderer(itemBlock, 4, "essence/essence_zivicio");
 
 	}
 

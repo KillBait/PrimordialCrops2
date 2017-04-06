@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "primordialcrops2:items/ingots/ingot_crucio"
+  }
+}

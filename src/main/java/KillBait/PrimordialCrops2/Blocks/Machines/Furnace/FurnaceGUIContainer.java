@@ -14,6 +14,10 @@ import static KillBait.PrimordialCrops2.Info.MODID;
  * Created by Jon on 20/10/2016.
  */
 
+
+	// TODO Change catalyst remaining bar to colour of essence instead of gradient?
+	// TODO Add mouseover tooltips to GUI progress bars
+
 @SideOnly(Side.CLIENT)
 public class FurnaceGUIContainer extends GuiContainer {
 

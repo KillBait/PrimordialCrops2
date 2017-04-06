@@ -1,8 +1,8 @@
 package KillBait.PrimordialCrops2.Registry;
 
-import KillBait.PrimordialCrops2.Blocks.Crops.Standard.cropCoal;
-import KillBait.PrimordialCrops2.Blocks.Crops.Standard.cropMinicio;
-import KillBait.PrimordialCrops2.Blocks.PrimordialCropBlock;
+import KillBait.PrimordialCrops2.Blocks.Crops.Vanilla.cropCoal;
+import KillBait.PrimordialCrops2.Blocks.Crops.Mods.PrimordialCrops.cropMinicio;
+import KillBait.PrimordialCrops2.Blocks.Base.PrimordialCropBlock;
 import KillBait.PrimordialCrops2.Utils.ItemModelProvider;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
