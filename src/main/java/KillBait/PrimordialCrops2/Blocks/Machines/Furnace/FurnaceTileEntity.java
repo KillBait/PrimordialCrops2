@@ -58,9 +58,27 @@ public class FurnaceTileEntity extends TileEntity implements IItemHandler, ITick
 	// The number of ticks required to cook an item
 	private static short COOK_TIME_FOR_COMPLETION = 200;  // vanilla value is 200 = 10 seconds
 
-	//
 	// ---------------------------------------
+	// meh.. ISidedInventorys are much easier to do than capabilites .. For example
 	//
+	// i decided i wanted none sided extract/insert because having to use a certain side limits the end users choices
+	//
+	// with ISided you have a completely seperate set of functions to handle automation from the GUI/TileEntity stuff
+	// its pretty simple to code something like hoppers can only insert in slot 0, job done...
+	//
+	// now.. Capabilites dont have this, using one ItemStackHandler for both leaves you no idea if it is user
+	// input/output or automation inserting/extracting, how do you allow the user to insert/remove a stack from a
+	// slot but disallow extracting for automation when using a single extract function, simple answer is you cant.
+	//
+	// How do i get around this, the hacky way using 2 ItemStackHandlers
+	//
+	// one private ItemStackHandler used by the TileEntity/Container/GUI with almost no restrictions
+	// (except for inserting into the output slot)
+	//
+	// a second ItemStackHandler that capabilites exposes to automation, add your insert/extract logic to it
+	// and then pass the function back back to the first private ItemStackHandler so it can access the inventory
+	//
+	// it's not good coding by a long shot, but works, good enough for me!!!
 
 	public ItemStackHandler furnaceItemStackHandler = new ItemStackHandler(TOTAL_SLOTS) {
 		@Override
@@ -344,6 +362,11 @@ public class FurnaceTileEntity extends TileEntity implements IItemHandler, ITick
 	public void readFromNBT(NBTTagCompound compound) {
 
 		super.readFromNBT(compound);
+
+		if (compound.hasKey("items")) {
+			furnaceItemStackHandler.deserializeNBT(compound);
+		}
+
 		cookTime = compound.getShort("CookTime");
 		currentCatalystRemaining = compound.getShort("catalystRemaining");
 		currentCatalystType = compound.getShort("catalystType");
@@ -358,6 +381,7 @@ public class FurnaceTileEntity extends TileEntity implements IItemHandler, ITick
 		super.writeToNBT(compound);
 
 		compound.setTag("items", furnaceItemStackHandler.serializeNBT());
+
 		compound.setShort("CookTime", cookTime);
 		compound.setShort("catalystRemaining", currentCatalystRemaining);
 		compound.setShort("catalystType", currentCatalystType);
