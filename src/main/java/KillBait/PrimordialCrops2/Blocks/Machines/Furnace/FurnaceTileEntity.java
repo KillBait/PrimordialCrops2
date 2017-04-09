@@ -7,32 +7,27 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-
-/**
- * Created by Jon on 20/10/2016.
- */
-
-	// TODO switch to ItemHandler capabilities
-
-public class FurnaceTileEntity extends TileEntity implements IInventory, ITickable{
+public class FurnaceTileEntity extends TileEntity implements IItemHandler, ITickable{
 
 	public static final int CATALYST_SLOT = 0;
 	public static final int FUEL_SLOT = 1;
@@ -40,82 +35,127 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 	public static final int OUTPUT_SLOT = 3;
 	public static final int TOTAL_SLOTS = 4;
 
-	private NonNullList<ItemStack> furnaceItemStacks = NonNullList.<ItemStack>withSize(TOTAL_SLOTS, ItemStack.EMPTY);
-
 	/** The number of burn ticks remaining on the curret piece of fuel */
 	private int burnTimeRemaining;
 	/** The initial fuel value of the currently burning fuel (in ticks of burn duration) */
 	private int burnTimeInitialValue;
 
-	// coal = 1600 fuel, 1 coal = 8 smelts of cobble, 200 fuel per craft at 1 fuel per tick
-    //
-	// to keep this 200 fuel to smelt 1 item ratio, we must increase the number of fuel consumed per tick.
-	//
-	// since we are using int's to keep the remaining fuel, we can only use round numbers
-	//
-	// using this bit of code
-	//
-	//	for (int i = 200; i >= 0; i--) {
-	//	  if (i > 0) {
-	//		LogHelper.info("Cook Time " + i + " - " + (double) 200 / i + " fuel per tick ");
-	//	  }
-	//  }
-	//
-	// we can see all the possible numbers down to 1 smelt per tick ( see SmeltTimes.txt )
-	//
-	//  only using the non fractioned numbers leave us with
-	//
-	//  Cook Time 200 ticks - 1.0 fuel per tick // VANILLA furnace speed
-	//  Cook Time 100 ticks - 2.0 fuel per tick   // minicio
-	//  Cook Time  50 ticks - 4.0 fuel per tick   // accio
-	//  Cook Time  40 ticks - 5.0 fuel per tick
-	//  Cook Time  25 ticks - 8.0 fuel per tick   // crucio
-	//  Cook Time  20 ticks - 10.0 fuel per tick
-	//  Cook Time  10 ticks - 20.0 fuel per tick  // imperio
-	//  Cook Time   8 ticks - 25.0 fuel per tick
-	//  Cook Time   5 ticks - 40.0 fuel per tick
-	//  Cook Time   4 ticks - 50.0 fuel per tick
-	//  Cook Time   2 ticks - 100.0 fuel per tick
-	//  Cook Time   1 ticks - 200.0 fuel per tick // zivicio
-
 	public int[] ticksPerCraftScale = {200,100,50,25,10,1};
 
-	//public int[] maxUsesPerCatalyst = {0,8,8,8,8,8}; // Testing purposes only!!
-	public int[] maxUsesPerCatalyst = {0,64,128,256,512,1024};
+	public int[] maxUsesPerCatalyst = {0,8,8,8,8,8}; // For Testing purposes only!!
+	//public int[] maxUsesPerCatalyst = {0,64,128,256,512,1024};
 
+	public short currentCatalystRemaining;
+	public short currentCatalystType; // 0 = none. 1= minicio, 2 = accio, 3 = crucio, 4 = imperio, 5 = zivicio
 
+	// The number of ticks the current item has been cooking
+	public short cookTime;
 
-	private short currentCatalystRemaining;
-	private short currentCatalystType; // 0 = none. 1= minicio, 2 = accio, 3 = crucio, 4 = imperio, 5 = zivicio
+	public short lastCookTime;
 
-	/**
-	 * The number of ticks the current item has been cooking
-	 */
-	private short cookTime;
-	private short lastCookTime;
 	private boolean emitParticles = false;
 
-	/**
-	 * The number of ticks required to cook an item
-	 */
+	// The number of ticks required to cook an item
 	private static short COOK_TIME_FOR_COMPLETION = 200;  // vanilla value is 200 = 10 seconds
 
+	//
+	// ---------------------------------------
+	//
 
-	private ItemStack input;
-	private ItemStack output;
-	private ItemStack fuel;
-	private ItemStack catalyst;
+	public ItemStackHandler furnaceItemStackHandler = new ItemStackHandler(TOTAL_SLOTS) {
+		@Override
+		protected void onContentsChanged(int slot) {
+			// We need to tell the tile entity that something has changed so that the furnace contents is persisted
+			FurnaceTileEntity.this.markDirty();
+		}
 
-	protected ItemStackHandler inputSlot;
-	protected ItemStackHandler outputSlot;
-	protected ItemStackHandler fuelSlot;
-	protected ItemStackHandler catalystSlot;
+		@Override
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+			if (slot == 0 && isItemValidForCatalystSlot(stack)) {
+				//LogHelper.info("Valid catalyst");
+				return super.insertItem(slot, stack, simulate);
+			}
 
-	private String customName;
+			if (slot == 1 && isItemValidForFuelSlot(stack)) {
+				//LogHelper.info("Valid fuel");
+				return super.insertItem(slot, stack, simulate);
+			}
 
-	public FurnaceTileEntity() {
-		clear();
+			if (slot == 2 && isItemValidForInputSlot(stack)) {
+				//LogHelper.info("Valid Smeltable Item");
+				return super.insertItem(slot, stack, simulate);
+			}
+
+			return stack;
+		}
+	};
+
+	private ItemStackHandler outputItemStackHandler = new ItemStackHandler(TOTAL_SLOTS) {
+		@Override
+		protected void onContentsChanged(int slot) {
+			// We need to tell the tile entity that something has changed so that the furnace contents is persisted
+			FurnaceTileEntity.this.markDirty();
+		}
+
+		@Override
+		public void setStackInSlot(int slot, @Nonnull ItemStack stack)
+		{
+			furnaceItemStackHandler.setStackInSlot(slot, stack);
+		}
+
+		@Override
+		public int getSlots()
+		{
+			return furnaceItemStackHandler.getSlots();
+		}
+
+		@Override
+		@Nonnull
+		public ItemStack getStackInSlot(int slot) {
+			return furnaceItemStackHandler.getStackInSlot(slot);
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+			if (slot != OUTPUT_SLOT) {
+				//LogHelper.info("Allowed insert into slot " + slot + " in outputItemstackHandler");
+				return furnaceItemStackHandler.insertItem(slot, stack, simulate);
+			}
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			if (slot == OUTPUT_SLOT) {
+				//LogHelper.info("Allowed extract from slot " + slot + " in outputItemstackHandler");
+				return furnaceItemStackHandler.extractItem(slot, amount, simulate);
+			}
+			//LogHelper.info("Denied extract from slot " + slot + " in outputItemstackHandler");
+			return ItemStack.EMPTY;
+		}
+	};
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
 	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return (T) outputItemStackHandler;
+		}
+		return super.getCapability(capability, facing);
+	}
+
+	//
+	// -----------------------------------------
+	//
+
+	public FurnaceTileEntity() {}
 
 	@Override
 	public void update() {
@@ -160,24 +200,25 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 	}
 
 	private void checkCatalyst() {
+
+
+		// TODO if catalyst is aleady stored on world load COOK_TIME_FOR_COMPLETION isn't set right and defaults to vanilla speed until new catalyst consumed
+
 		// check if there any catalyst left to use up.
 		if (currentCatalystRemaining == 0) {
 			// check if the catalyst slot has items in it and if they are essence
-			if (!furnaceItemStacks.get(CATALYST_SLOT).isEmpty() && furnaceItemStacks.get(CATALYST_SLOT).getItem() instanceof CraftEssence) {
+			if (!furnaceItemStackHandler.getStackInSlot(CATALYST_SLOT).isEmpty() && furnaceItemStackHandler.getStackInSlot(CATALYST_SLOT).getItem() instanceof CraftEssence) {
 
-				int meta = furnaceItemStacks.get(CATALYST_SLOT).getMetadata();
+				int meta = furnaceItemStackHandler.getStackInSlot(CATALYST_SLOT).getMetadata();
 				meta++;
 
 				currentCatalystRemaining = (short) maxUsesPerCatalyst[meta];
 				currentCatalystType = (short) meta;
-				furnaceItemStacks.get(CATALYST_SLOT).shrink(1);
+				furnaceItemStackHandler.getStackInSlot(CATALYST_SLOT).shrink(1);
 				COOK_TIME_FOR_COMPLETION = (short) ticksPerCraftScale[meta];
 				this.markDirty();
 			}
 		}
-		/*if (!world.isRemote) {
-			LogHelper.info("type = " + currentCatalystType + " remain = " + currentCatalystRemaining + " ticks = " + COOK_TIME_FOR_COMPLETION);
-		}*/
 	}
 
 	private boolean useFuel() {
@@ -186,19 +227,19 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		boolean inventoryChanged = false;
 
 		if (burnTimeRemaining <= 0) {
-			if (!furnaceItemStacks.get(FUEL_SLOT).isEmpty() && getItemBurnTime(furnaceItemStacks.get(FUEL_SLOT)) > 0) {
+			if (!furnaceItemStackHandler.getStackInSlot(FUEL_SLOT).isEmpty() && getItemBurnTime(furnaceItemStackHandler.getStackInSlot(FUEL_SLOT)) > 0) {
 
-				burnTimeInitialValue = getItemBurnTime(furnaceItemStacks.get(FUEL_SLOT));
+				burnTimeInitialValue = getItemBurnTime(furnaceItemStackHandler.getStackInSlot(FUEL_SLOT));
 				burnTimeRemaining = burnTimeInitialValue - (200 / COOK_TIME_FOR_COMPLETION);
 
 				// check if fuel in slot is a container item, i.e.  if it's a lava bucket, return the empty bucket
 				// otherwise reduce the fuel in slot by one.
-				ItemStack stack = furnaceItemStacks.get(FUEL_SLOT).getItem().getContainerItem(furnaceItemStacks.get(FUEL_SLOT));
-				if (!stack.isEmpty() && furnaceItemStacks.get(FUEL_SLOT).getCount() == 1 ) {
-					furnaceItemStacks.get(FUEL_SLOT).shrink(1);  // remove the stack
-					furnaceItemStacks.set(FUEL_SLOT, stack.copy()); // add the empty container
+				ItemStack stack = furnaceItemStackHandler.getStackInSlot(FUEL_SLOT).getItem().getContainerItem(furnaceItemStackHandler.getStackInSlot(FUEL_SLOT));
+				if (!stack.isEmpty() && furnaceItemStackHandler.getStackInSlot(FUEL_SLOT).getCount() == 1 ) {
+					furnaceItemStackHandler.getStackInSlot(FUEL_SLOT).shrink(1);  // remove the stack
+					furnaceItemStackHandler.setStackInSlot(FUEL_SLOT, stack.copy()); // add the empty container
 				}else {
-					furnaceItemStacks.get(FUEL_SLOT).shrink(1);
+					furnaceItemStackHandler.getStackInSlot(FUEL_SLOT).shrink(1);
 				}
 				// refresh the TileEntity
 				inventoryChanged = true;
@@ -216,9 +257,9 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 
 	private boolean canSmelt() {
 		// is item in input slot?
-		if (!furnaceItemStacks.get(INPUT_SLOT).isEmpty()) {
+		if (!furnaceItemStackHandler.getStackInSlot(INPUT_SLOT).isEmpty() ) {
 			// if there is fuel in the slot or there is fuel stored return true
-			if (burnTimeRemaining > 0 || !furnaceItemStacks.get(FUEL_SLOT).isEmpty()) {
+			if (burnTimeRemaining > 0 || !furnaceItemStackHandler.getStackInSlot(FUEL_SLOT).isEmpty()) {
 				// Cook using new fuel
 				return true;
 			}
@@ -226,60 +267,55 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		return false;
 	}
 
-	/**
-	 * checks that there is an item to be smelted in one of the input slots and that there is room for the result in the output slots
-	 * If desired, performs the smelt
-	 */
+	// check if an item to be smelted is in the input slot and that there is room for the result in the output slots
 
 	private void smeltItem()
 	{
 		// check if something in input slot
-		if (!furnaceItemStacks.get(INPUT_SLOT).isEmpty()) {
+		if (!furnaceItemStackHandler.getStackInSlot(INPUT_SLOT).isEmpty()) {
 			// get the result of smelting the input slot item
-			ItemStack smeltResult = FurnaceRecipes.instance().getSmeltingResult(furnaceItemStacks.get(INPUT_SLOT));
+			ItemStack smeltResult = FurnaceRecipes.instance().getSmeltingResult(furnaceItemStackHandler.getStackInSlot(INPUT_SLOT));
 			// check if smeltResult is a valid item ( will be empty if not )
 			if (!smeltResult.isEmpty()) {
 				// get the contents of output slot			}
-				ItemStack outputStack = furnaceItemStacks.get(OUTPUT_SLOT);
+				ItemStack outputStack = furnaceItemStackHandler.getStackInSlot(OUTPUT_SLOT);
 				// check if output slot is empty
 				if (outputStack.isEmpty()) {
 					// set output slot to smeltResult, reduce the input slot amount
-					furnaceItemStacks.set(OUTPUT_SLOT, smeltResult.copy());
-					furnaceItemStacks.get(INPUT_SLOT).shrink(1);
+					furnaceItemStackHandler.setStackInSlot(OUTPUT_SLOT, smeltResult.copy());
+					furnaceItemStackHandler.getStackInSlot(INPUT_SLOT).shrink(1);
 					// not sure if needed, but, check if input stack is used up and set it to an empty stack if it is
-					if (furnaceItemStacks.get(INPUT_SLOT).getCount() <= 0) {
-						furnaceItemStacks.set(INPUT_SLOT, ItemStack.EMPTY);
+					if (furnaceItemStackHandler.getStackInSlot(INPUT_SLOT).getCount() <= 0) {
+						furnaceItemStackHandler.setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
 					}
-					//LogHelper.info("Empty Slot");
 					// check if any catalyst is left, if so, remove 1
 					if (currentCatalystRemaining > 0) {
 						currentCatalystRemaining--;
 					}
-					//LogHelper.info("burnTimeRemaing = " + burnTimeRemaining);
 					markDirty();
 				} else {
 					if (outputStack.getItem() == smeltResult.getItem() && (!outputStack.getHasSubtypes() || outputStack.getMetadata() == outputStack.getMetadata())
 							&& ItemStack.areItemStackTagsEqual(outputStack, smeltResult)) {
 
-						int combinedSize = furnaceItemStacks.get(OUTPUT_SLOT).getCount() + smeltResult.getCount();
+						int combinedSize = furnaceItemStackHandler.getStackInSlot(OUTPUT_SLOT).getCount() + smeltResult.getCount();
 
-						if (combinedSize <= getInventoryStackLimit() && combinedSize <= furnaceItemStacks.get(OUTPUT_SLOT).getMaxStackSize()) {
+						// TODO ...BUG.. when output slot is full, fuel burns but nothing smelts
+
+						if (combinedSize <= furnaceItemStackHandler.getStackInSlot(OUTPUT_SLOT).getMaxStackSize()) {
 							// remove 1 from input stack
-							furnaceItemStacks.get(INPUT_SLOT).shrink(1);
+							furnaceItemStackHandler.getStackInSlot(INPUT_SLOT).shrink(1);
 							// combine the number of items in input and output slots
-							int newStackSize = furnaceItemStacks.get(OUTPUT_SLOT).getCount() + smeltResult.getCount();
+							int newStackSize = furnaceItemStackHandler.getStackInSlot(OUTPUT_SLOT).getCount() + smeltResult.getCount();
 							// set output slot to new stacksize
-							furnaceItemStacks.get(OUTPUT_SLOT).setCount(newStackSize);
+							furnaceItemStackHandler.getStackInSlot(OUTPUT_SLOT).setCount(newStackSize);
 							// not sure if needed, but, check if input stack is used up and set it to an empty stack if it is
-							if (furnaceItemStacks.get(INPUT_SLOT).getCount() <= 0) {
-								furnaceItemStacks.set(INPUT_SLOT, ItemStack.EMPTY);  //getStackSize(), EmptyItem
+							if (furnaceItemStackHandler.getStackInSlot(INPUT_SLOT).getCount() <= 0) {
+								furnaceItemStackHandler.setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
 							}
-							//LogHelper.info("Merge Stacks");
 							// check if any catalyst is left, if so, remove 1 from total
 							if (currentCatalystRemaining > 0) {
 								currentCatalystRemaining--;
 							}
-							//LogHelper.info("burnTimeRemaing = " + burnTimeRemaining);
 							markDirty();
 						}
 					}
@@ -288,11 +324,8 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		}
 	}
 
-	@Override
-	public String getName() { return "container.primordialfurnace.name";
-	}
+	public String getName() { return "container.primordialfurnace.name"; }
 
-	@Override
 	public boolean hasCustomName() {
 		return false;
 	}
@@ -309,20 +342,8 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
+
 		super.readFromNBT(compound);
-
-		final byte NBT_TYPE_COMPOUND = 10;       // See NBTBase.createNewByType()
-		NBTTagList dataForAllSlots = compound.getTagList("Items", NBT_TYPE_COMPOUND);
-
-		this.furnaceItemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);  // set all slots to empty
-		for (int i = 0; i < dataForAllSlots.tagCount(); ++i) {
-			NBTTagCompound dataForOneSlot = dataForAllSlots.getCompoundTagAt(i);
-			byte slotNumber = dataForOneSlot.getByte("Slot");
-			if (slotNumber >= 0 && slotNumber < this.furnaceItemStacks.size()) {
-				this.furnaceItemStacks.set(slotNumber,new ItemStack(dataForOneSlot));
-			}
-		}
-
 		cookTime = compound.getShort("CookTime");
 		currentCatalystRemaining = compound.getShort("catalystRemaining");
 		currentCatalystType = compound.getShort("catalystType");
@@ -333,20 +354,10 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+
 		super.writeToNBT(compound);
 
-		NBTTagList dataForAllSlots = new NBTTagList();
-		for (int i = 0; i < this.furnaceItemStacks.size(); ++i) {
-			if (!this.furnaceItemStacks.get(i).isEmpty()) {
-				NBTTagCompound dataForThisSlot = new NBTTagCompound();
-				dataForThisSlot.setByte("Slot", (byte) i);
-				this.furnaceItemStacks.get(i).writeToNBT(dataForThisSlot);
-				dataForAllSlots.appendTag(dataForThisSlot);
-			}
-		}
-
-		compound.setTag("Items", dataForAllSlots);
-
+		compound.setTag("items", furnaceItemStackHandler.serializeNBT());
 		compound.setShort("CookTime", cookTime);
 		compound.setShort("catalystRemaining", currentCatalystRemaining);
 		compound.setShort("catalystType", currentCatalystType);
@@ -360,100 +371,7 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
 	}
 
-	/*
-	// ISidedInventory function
-	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		if (side == EnumFacing.DOWN) {
-			return new int[]{FUEL_SLOT};
-		} else if (side == EnumFacing.UP) {
-			return new int[]{INPUT_SLOT};
-		} else
-			// TODO may need adjusting if automation pulls catalyst out of slot
-			return new int[]{CATALYST_SLOT, OUTPUT_SLOT};
-	}
-
-	// ISidedInventory function
-	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-		return isItemValidForSlot(index, itemStackIn);
-	}
-
-	// ISidedInventory function
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-		LogHelper.info("can extract item");
-		return false;
-	}*/
-
 	public static ItemStack getSmeltingResult(ItemStack stack) { return FurnaceRecipes.instance().getSmeltingResult(stack); }
-
-	@Override
-	public int getSizeInventory() {
-		return furnaceItemStacks.size();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		for (ItemStack itemstack : furnaceItemStacks) {
-			if (!itemstack.isEmpty()) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	//called evert tick
-	@Nullable
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		return furnaceItemStacks.get(index);
-	}
-
-	@Nullable
-	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		ItemStack itemStackInSlot = getStackInSlot(index);
-		if (itemStackInSlot.isEmpty()) return ItemStack.EMPTY;
-
-		ItemStack itemStackRemoved;
-		if (itemStackInSlot.getCount() <= count) {
-			itemStackRemoved = itemStackInSlot;
-			setInventorySlotContents(index, ItemStack.EMPTY);
-		} else {
-			itemStackRemoved = itemStackInSlot.splitStack(count);
-			if (itemStackInSlot.getCount() == 0) {
-				setInventorySlotContents(index, ItemStack.EMPTY);
-			}
-		}
-		markDirty();
-		return itemStackRemoved;
-	}
-
-
-	@Override
-	public ItemStack removeStackFromSlot(int slotIndex) {
-
-		if (getStackInSlot(slotIndex) != ItemStack.EMPTY) {
-			setInventorySlotContents(slotIndex, ItemStack.EMPTY);
-		}
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	public void setInventorySlotContents(int slotIndex, ItemStack itemstack) {
-		furnaceItemStacks.set(slotIndex,itemstack);
-		if (!itemstack.isEmpty() && itemstack.getCount() > getInventoryStackLimit()) {
-			itemstack.setCount(getInventoryStackLimit());
-		}
-		markDirty();
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
 
 	public static boolean isItemFuel(ItemStack stack) {
 		// returns the number of ticks the supplied fuel will keep the furnace burning, or 0 if the item isn't fuel
@@ -494,23 +412,6 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 			if (item == Items.BLAZE_ROD) return 2400;
 			return net.minecraftforge.fml.common.registry.GameRegistry.getFuelValue(stack);
 		}
-	}
-
-
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-
-		//LogHelper.info("Is Slot " + index + " Valid for stack " + stack);
-
-		if (index == CATALYST_SLOT) {
-			return isItemValidForCatalystSlot(stack);
-		} else if (index == FUEL_SLOT) {
-			return isItemValidForFuelSlot(stack);
-		} else if (index == INPUT_SLOT) {
-			return isItemValidForInputSlot(stack);
-		}
-		return false;
 	}
 
 	// Return true if the given stack is allowed to be inserted in the given slot
@@ -568,13 +469,6 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		this.readFromNBT(tag);
 	}
 
-	@Override
-	public void clear() {
-		this.furnaceItemStacks.clear();
-	}
-
-
-
 	private static final byte COOKTIME_ID = 0;
 	private static final byte BURN_TIME_INITIAL_ID = 1;
 	private static final byte BURN_TIME_REMAINING_ID = 2;
@@ -582,7 +476,7 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 	private static final byte CATALYST_REMAINING_ID = 4;
 	private static final byte NUMBER_OF_FIELDS = 5;
 
-	@Override
+	//@Override
 	public int getField(int id) {
 		if (id == COOKTIME_ID) return cookTime;
 		if (id == BURN_TIME_INITIAL_ID) return burnTimeInitialValue;
@@ -596,7 +490,7 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		return 0;
 	}
 
-	@Override
+	//@Override
 	public void setField(int id, int value)
 	{
 		if (id == COOKTIME_ID) cookTime = (short)value;
@@ -610,7 +504,7 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 		}
 	}
 
-	@Override
+	//@Override
 	public int getFieldCount() {
 		return NUMBER_OF_FIELDS;
 	}
@@ -644,24 +538,39 @@ public class FurnaceTileEntity extends TileEntity implements IInventory, ITickab
 
 	public double fractionOfCookTimeComplete()
 	{
-		double fraction = cookTime / (double)COOK_TIME_FOR_COMPLETION;
+		double fraction = this.cookTime / (double)COOK_TIME_FOR_COMPLETION;
 		return MathHelper.clamp(fraction, 0.0, 1.0);
 	}
 
+	// Implimenting IItemHandler means you have to override these 5 functions, but there never called!!
+
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
-		return false;
+	public int getSlots() {
+		return 0;
 	}
 
-	// should be blank
+	@Nonnull
 	@Override
-	public void openInventory(EntityPlayer player) {
-
+	public ItemStack getStackInSlot(int slot) {
+		return null;
 	}
 
-	// should be blank
+	@Nonnull
 	@Override
-	public void closeInventory(EntityPlayer player) {
-
+	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+		return null;
 	}
+
+	@Nonnull
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		return null;
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return 0;
+	}
+
+
 }

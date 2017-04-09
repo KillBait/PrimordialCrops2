@@ -34,12 +34,9 @@ import java.util.Random;
 
 import static KillBait.PrimordialCrops2.Info.MODID;
 
-/**
- * Created by Jon on 19/10/2016.
- */
-
 	// TODO add light when smelting
-	// TODO New Model/Texture ?????
+	// TODO New Model and Texture ?????
+
 public class PrimordialFurnace extends PrimordialBlockContainer {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
@@ -52,7 +49,6 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 		super(Material.ROCK, "primordialfurnace");
 		this.setHardness(4f);
 		this.setSoundType(SoundType.STONE);
-		//setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 		GameRegistry.registerTileEntity(FurnaceTileEntity.class, MODID + "_tileentity");
 	}
 
@@ -84,32 +80,6 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 		// super call removes the tileentity
 		super.breakBlock(worldIn, pos, state);
 	}
-
-	/*//remove neighborChanged when furnace working
-	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
-		int powered = worldIn.isBlockIndirectlyGettingPowered(pos);
-		worldIn.setBlockState(pos, state.withProperty(WORKING, powered > 0), 3);
-	}
-
-	// Un-needed???
-	// Remove if it is
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
-		if (tileEntity instanceof FurnaceTileEntity) {
-
-			FurnaceTileEntity furnaceTileEntity = (FurnaceTileEntity) tileEntity;
-			if (furnaceTileEntity.getField(0) > 0) {
-				World.setBlockState(pos, state.withProperty(WORKING, powered > 0), 3);
-			}
-			int burningSlots = TileEntity.numberOfBurningFuelSlots();
-			//burningSlots = MathHelper.clamp_int(burningSlots, 0, 4);
-			//return getDefaultState().withProperty(BURNING_SIDES_COUNT, burningSlots);
-		}
-		return state;
-	}*/
-
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
@@ -172,22 +142,8 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 	{
 		IBlockState iblockstate = worldIn.getBlockState(pos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
-		//keepInventory = true;
 
-		/*if (active)
-		{
-			worldIn.setBlockState(pos, iblockstate.withProperty(WORKING, active), 3);
-			//worldIn.setBlockState(pos, Blocks.LIT_FURNACE.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-			//worldIn.setBlockState(pos, Blocks.LIT_FURNACE.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-		}
-		else
-		{*/
-			worldIn.setBlockState(pos, iblockstate.withProperty(WORKING, active), 3);
-			//worldIn.setBlockState(pos, Blocks.FURNACE.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-			//worldIn.setBlockState(pos, Blocks.FURNACE.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-		/*}*/
-
-		//keepInventory = false;
+		worldIn.setBlockState(pos, iblockstate.withProperty(WORKING, active), 3);
 
 		if (tileentity != null)
 		{
