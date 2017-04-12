@@ -2,18 +2,15 @@ package KillBait.PrimordialCrops2.Blocks.Machines.Furnace;
 
 import KillBait.PrimordialCrops2.Utils.LogHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.SlotItemHandler;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 
 public class FurnaceContainer extends Container{
@@ -26,23 +23,21 @@ public class FurnaceContainer extends Container{
 	private Point slotcoord_output = new Point(116, 35);
 	private Point slotcoord_catalyst = new Point(21, 35);
 
-	public static final int TOTAL_CATALYST_SLOTS = 1;
-	public static final int TOTAL_FUEL_SLOTS = 1;
-	public static final int TOTAL_INPUT_SLOTS = 1;
-	public static final int TOTAL_OUTPUT_SLOTS = 1;
+	private static final int TOTAL_CATALYST_SLOTS = 1;
+	private static final int TOTAL_FUEL_SLOTS = 1;
+	private static final int TOTAL_INPUT_SLOTS = 1;
+	private static final int TOTAL_OUTPUT_SLOTS = 1;
 
-	public static final int FURNACE_SLOT_INDEX_START = 0;
-	public static final int FURNACE_SLOT_TOTAL = TOTAL_CATALYST_SLOTS + TOTAL_FUEL_SLOTS + TOTAL_INPUT_SLOTS + TOTAL_OUTPUT_SLOTS;
+	private static final int FURNACE_SLOT_INDEX_START = 0;
+	private static final int FURNACE_SLOT_TOTAL = TOTAL_CATALYST_SLOTS + TOTAL_FUEL_SLOTS + TOTAL_INPUT_SLOTS + TOTAL_OUTPUT_SLOTS;
 
-	public static final int PLAYER_SLOT_INDEX_START = FURNACE_SLOT_TOTAL;
-	public static final int PLAYER_SLOT_TOTAL = 36;
+	private static final int PLAYER_SLOT_INDEX_START = FURNACE_SLOT_TOTAL;
+	private static final int PLAYER_SLOT_TOTAL = 36;
 
-	public static final int CATALYST_SLOT_INDEX_START = 0;
-	public static final int FUEL_SLOT_INDEX_START = CATALYST_SLOT_INDEX_START + TOTAL_CATALYST_SLOTS;
-	public static final int INPUT_SLOT_INDEX_START = FUEL_SLOT_INDEX_START + TOTAL_FUEL_SLOTS;
-	public static final int OUTPT_SLOT_INDEX_START = INPUT_SLOT_INDEX_START + TOTAL_OUTPUT_SLOTS;
-
-	public int lastCookTime;
+	private static final int CATALYST_SLOT_INDEX_START = 0;
+	private static final int FUEL_SLOT_INDEX_START = CATALYST_SLOT_INDEX_START + TOTAL_CATALYST_SLOTS;
+	private static final int INPUT_SLOT_INDEX_START = FUEL_SLOT_INDEX_START + TOTAL_FUEL_SLOTS;
+	//public static final int OUTPT_SLOT_INDEX_START = INPUT_SLOT_INDEX_START + TOTAL_OUTPUT_SLOTS;
 
 	public FurnaceContainer(IInventory playerInventory, FurnaceTileEntity furnaceTile) {
 
@@ -69,32 +64,33 @@ public class FurnaceContainer extends Container{
 
 	private void addPlayerSlots(IInventory playerInventory) {
 
+		int slot = 0;
+
 		// Slots for the hotbar
 		for (int row = 0; row < 9; ++row) {
-			int slot = row;
-			int x = 8 + row * 18;
+			//int slot = row;
+			int x = 8 + (row * 18);
 			int y = 72 + 70;
-			this.addSlotToContainer(new Slot(playerInventory, slot, x, y));
+			this.addSlotToContainer(new Slot(playerInventory, slot++, x, y));
 		}
 
 		// Slots for the main inventory
 		for (int row = 0; row < 3; ++row) {
 			for (int col = 0; col < 9; ++col) {
-				int slot = 9 + row * 9 + col;
-				int x = 8 + col * 18;
-				int y = row * 18 + 84;
-				this.addSlotToContainer(new Slot(playerInventory, slot, x, y));
+				//int slot = 9 + row * 9 + col;
+				int x = 8 + (col * 18);
+				int y = (row * 18) + 84;
+				this.addSlotToContainer(new Slot(playerInventory, slot++, x, y));
 			}
 		}
 
 
 	}
 
-	@Nullable
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
 
-		Slot sourceSlot = (Slot)inventorySlots.get(index);
+		Slot sourceSlot = inventorySlots.get(index);
 		if (sourceSlot == null || !sourceSlot.getHasStack()) return ItemStack.EMPTY;
 		ItemStack sourceStack = sourceSlot.getStack();
 		ItemStack sourceStackCopy = sourceStack.copy();
@@ -123,7 +119,7 @@ public class FurnaceContainer extends Container{
 			}
 
 		} else if (index >= FURNACE_SLOT_INDEX_START && index < FURNACE_SLOT_INDEX_START + FURNACE_SLOT_TOTAL) {
-			LogHelper.info("Transfer from furnace slot " + index  + " type " + sourceSlot);
+			//LogHelper.info("Transfer from furnace slot " + index  + " type " + sourceSlot);
 			if (!mergeItemStack(sourceStack, PLAYER_SLOT_INDEX_START, PLAYER_SLOT_INDEX_START + PLAYER_SLOT_TOTAL, false)) {
 				return ItemStack.EMPTY;
 			}

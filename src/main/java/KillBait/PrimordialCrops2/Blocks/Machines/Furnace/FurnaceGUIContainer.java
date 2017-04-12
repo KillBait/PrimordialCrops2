@@ -1,5 +1,6 @@
 package KillBait.PrimordialCrops2.Blocks.Machines.Furnace;
 
+import KillBait.PrimordialCrops2.Utils.Colours;
 import KillBait.PrimordialCrops2.Utils.LogHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -11,16 +12,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 import static KillBait.PrimordialCrops2.Info.MODID;
 
-/**
- * Created by Jon on 20/10/2016.
- */
-
-
-	// TODO Change catalyst remaining bar to colour of essence instead of gradient?
-	// TODO Add mouseover tooltips to GUI progress bars
+	// TODO Add more mouseover tooltips to GUI
 
 @SideOnly(Side.CLIENT)
 public class FurnaceGUIContainer extends GuiContainer {
@@ -42,6 +39,8 @@ public class FurnaceGUIContainer extends GuiContainer {
 	private Point catalyst_cord = new Point(40, 35);
 	private Point catalyst_uv = new Point(177, 32);
 	private Point catalyst_size = new Point(2, 16);
+
+	private String[] catalystTooltip = {Colours.LIGHTGREEN + "Minicio", Colours.ORANGE + "Accio", Colours.YELLOW + "Crucio", Colours.LIGHTCYAN + "Imperio", Colours.PURPLE + "Zivicio"};
 
 
 	public FurnaceGUIContainer(InventoryPlayer pInv, FurnaceTileEntity furnaceTileEntity) {
@@ -76,17 +75,38 @@ public class FurnaceGUIContainer extends GuiContainer {
 
 		double catalystRemaining = this.furnaceTE.fractionOfCatalystRemaining();
 		int cyOffset = (int) ((1.0 - catalystRemaining) * catalyst_size.y);
+		int typeOffset = 4 * this.furnaceTE.currentCatalystType;
 
-		drawTexturedModalRect(guiLeft + catalyst_cord.x, guiTop + catalyst_cord.y + cyOffset, catalyst_uv.x, catalyst_uv.y + cyOffset, catalyst_size.x, catalyst_size.y - cyOffset);
-
+		drawTexturedModalRect(guiLeft + catalyst_cord.x, guiTop + catalyst_cord.y + cyOffset, catalyst_uv.x + typeOffset, catalyst_uv.y + cyOffset, catalyst_size.x, catalyst_size.y - cyOffset);
 
 
 	}
 
+	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		String s = furnaceTE.getDisplayName().getUnformattedText();
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6,  Color.darkGray.getRGB());
 		this.fontRenderer.drawString(this.playerInv.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, Color.darkGray.getRGB());
 
+	}
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		//run the super first, makes sure we draw over everything
+		super.drawScreen(mouseX, mouseY, partialTicks);
+
+		// general array of strings we can re-use for each tooltip
+		List<String> text = new ArrayList<String>();
+
+		// dont need to add guiLeft and guiTop to starting co-ords, the function does that for us.
+		if (isPointInRegion(catalyst_cord.x, catalyst_cord.y, 2,16,  mouseX, mouseY)) {
+			if (this.furnaceTE.fractionOfCatalystRemaining() > 0 ) {
+				text.add("Catalyst : " + catalystTooltip[this.furnaceTE.currentCatalystType - 1]);
+				text.add(Colours.YELLOW + this.furnaceTE.currentCatalystRemaining + " Uses Remaing");
+			}else{
+				text.add("Catalyst : None");
+			}
+			drawHoveringText(text, mouseX, mouseY);
+		}
 	}
 }

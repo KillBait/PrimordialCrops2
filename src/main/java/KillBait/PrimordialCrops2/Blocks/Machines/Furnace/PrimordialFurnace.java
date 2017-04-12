@@ -24,6 +24,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,7 +35,6 @@ import java.util.Random;
 
 import static KillBait.PrimordialCrops2.Info.MODID;
 
-	// TODO add light when smelting
 	// TODO New Model and Texture ?????
 
 public class PrimordialFurnace extends PrimordialBlockContainer {
@@ -42,7 +42,7 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyBool WORKING = PropertyBool.create("enabled");
 	//public static String furnaceName;
-	public static final int GUI_ID = 1; // ID 1 reserved for in-game book
+	public static final int GUI_ID = 1; // ID 0 reserved for in-game book
 
 
 	public PrimordialFurnace() {
@@ -137,6 +137,17 @@ public class PrimordialFurnace extends PrimordialBlockContainer {
 			}
 		}
 	}
+
+	@Override
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+		if (state.getValue(WORKING)) {
+			lightValue = 15;
+		}else{
+			lightValue = 0;
+		}
+		return lightValue;
+	}
+
 
 	public static void setState(boolean active, World worldIn, BlockPos pos)
 	{
